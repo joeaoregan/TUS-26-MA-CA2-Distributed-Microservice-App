@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.tus</groupId>
-	<artifactId>guitarinventory</artifactId>
+	<artifactId>ca2-guitarinventory</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>
 	<description/>
