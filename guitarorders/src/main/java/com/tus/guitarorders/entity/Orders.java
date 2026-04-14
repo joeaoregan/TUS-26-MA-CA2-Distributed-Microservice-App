@@ -15,11 +15,11 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class GuitarOrders extends BaseEntity {
+public class Orders extends BaseEntity {
 
     @Id
-    @Column(name = "order_id")
-    private Long orderId;
+    @Column(name = "order_number")
+    private Long orderNumber;
 
     @Column(name = "customer_id")
     private Long customerId;
