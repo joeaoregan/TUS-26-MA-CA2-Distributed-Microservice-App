@@ -36,10 +36,6 @@ public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
                 throw new CustomerAlreadyExistsException(
                         "Customer already registered with given mobile Number " + customerDto.getMobileNumber());
             }
-		customer.setCreatedAt(LocalDateTime.now());
-		customer.setCreatedBy("default");
-		customer.setUpdatedAt(LocalDateTime.now());
-		customer.setUpdatedBy("default");
 		Customer savedCustomer = customerRepository.save(customer);
 		ordersRepository.save(createNewOrder(savedCustomer));
     }
@@ -55,13 +51,8 @@ public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
         newOrder.setOrderNumber(randomOrderNumber);
         newOrder.setStatus(GuitarOrdersConstants.PENDING);
         newOrder.setQuantity(1);
-        newOrder.setCreatedAt(LocalDateTime.now());
-        newOrder.setCreatedBy("default");
-        newOrder.setUpdatedAt(LocalDateTime.now());
-        newOrder.setUpdatedBy("default");
         return newOrder;
-    }
-    
+    }    
     
     @Override
     public CustomerDto fetchOrder(String mobileNumber) {
