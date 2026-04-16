@@ -4,6 +4,7 @@ package com.tus.guitarinventory.service.impl;
 import com.tus.guitarinventory.constants.InventoryConstants;
 import com.tus.guitarinventory.dto.InventoryDto;
 import com.tus.guitarinventory.entity.Guitar;
+import com.tus.guitarinventory.exception.GuitarAlreadyExistsException;
 import com.tus.guitarinventory.exception.ResourceNotFoundException;
 import com.tus.guitarinventory.mapper.InventoryMapper;
 import com.tus.guitarinventory.repository.GuitarRepository;
@@ -20,7 +21,13 @@ public class InventoryServiceImpl implements IInventoryService {
     private GuitarRepository guitarRepository;
 
     @Override
-    public void createGuitar(InventoryDto inventoryDto) {
+    public void createGuitar(InventoryDto inventoryDto) {// Check if guitar already exists
+        Optional<Guitar> optionalGuitar = guitarRepository.findBySerialNumber(inventoryDto.getSerialNumber());
+        if(optionalGuitar.isPresent()){
+            throw new GuitarAlreadyExistsException("Guitar already registered with given serialNumber "
+                    + inventoryDto.getSerialNumber());
+        }
+        
         Guitar guitar = InventoryMapper.mapToGuitar(inventoryDto, new Guitar());
         guitarRepository.save(guitar);
     }
