@@ -1,5 +1,5 @@
 // Lab 2
-package com.tus.guitarorders.dto;
+package com.tus.guitarinventory.dto;
 
 import java.time.LocalDateTime;
 

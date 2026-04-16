@@ -42,6 +42,7 @@ public class GuitarOrdersController {
         return ResponseEntity.status(HttpStatus.OK).body(customerDto);
     }
 
+    // Lab 3
     @PostMapping()
     public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) { // Lab 7
         iGuitarOrdersService.createOrder(customerDto);

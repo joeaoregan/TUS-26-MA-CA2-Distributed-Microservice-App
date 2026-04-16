@@ -1,6 +1,8 @@
 server:
   port: 8080
 spring:
+  application:
+    name: guitarorders
   datasource:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
@@ -14,3 +16,11 @@ spring:
     hibernate:
       ddl-auto:update
     show-sql: true
+# If profiles needed later
+build:
+  version: "1.0"
+inventory:
+  message: "Welcome to orders related local APIs"
+  contactDetails:
+    name: "Joe O'Regan - Orders Developer"
+    email: "A00258304@student.tus.ie"

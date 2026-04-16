@@ -1,3 +1,4 @@
+// Lab 2
 package com.tus.guitarorders.dto;
 
 import lombok.AllArgsConstructor;
