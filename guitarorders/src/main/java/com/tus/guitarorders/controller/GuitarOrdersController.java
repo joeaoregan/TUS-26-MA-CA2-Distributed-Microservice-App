@@ -35,11 +35,19 @@ public class GuitarOrdersController {
 
 	@Value("${build.version}")
 	private String buildVersion;
-
+	
+	@Autowired
+	private Environment environment; // Lab 11 configuration properties using Environment
+	
 	// Lab 10 - Implement constructor injection for IGuitarOrdersService
 	public GuitarOrdersController(IGuitarOrdersService iGuitarOrdersService) {
 		this.iGuitarOrdersService = iGuitarOrdersService;
 	}
+	
+	@GetMapping("/java-version")
+    public ResponseEntity<String> getJavaVersion() { // Lab 11
+        return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("JAVA_HOME"));
+    }
 
 	@GetMapping("/build-info")
 	public ResponseEntity<String> getBuildInfo() {
