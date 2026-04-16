@@ -24,7 +24,7 @@ public class InventoryServiceImpl implements IInventoryService {
     public void createGuitar(InventoryDto inventoryDto) {// Check if guitar already exists
         Optional<Guitar> optionalGuitar = guitarRepository.findBySerialNumber(inventoryDto.getSerialNumber());
         if(optionalGuitar.isPresent()){
-            throw new GuitarAlreadyExistsException("Guitar already registered with given serialNumber "
+            throw new GuitarAlreadyExistsException(InventoryConstants.MESSAGE_400_GUITAR_ALREADY_EXISTS
                     + inventoryDto.getSerialNumber());
         }
         

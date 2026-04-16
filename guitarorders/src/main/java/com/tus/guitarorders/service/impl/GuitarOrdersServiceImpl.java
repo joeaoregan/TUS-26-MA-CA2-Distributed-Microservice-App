@@ -34,7 +34,7 @@ public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
     		Optional<Customer> optionalcustomer = customerRepository.findByMobileNumber(customerDto.getMobileNumber());
     		if (optionalcustomer.isPresent()) {
                 throw new CustomerAlreadyExistsException(
-                        "Customer already registered with given mobile Number " + customerDto.getMobileNumber());
+                        GuitarOrdersConstants.MESSAGE_400_CUSTOMER_ALREADY_EXISTS + customerDto.getMobileNumber());
             }
 		Customer savedCustomer = customerRepository.save(customer);
 		ordersRepository.save(createNewOrder(savedCustomer));
