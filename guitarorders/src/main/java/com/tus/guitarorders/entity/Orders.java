@@ -24,8 +24,8 @@ public class Orders extends BaseEntity {
     @Column(name = "customer_id")
     private Long customerId;
 
-    @Column(name = "guitar_id")
-    private Long guitarId;
+    @Column(name = "serial_number")
+    private String serialNumber;
 
     @Column(name = "quantity")
     private Integer quantity;
