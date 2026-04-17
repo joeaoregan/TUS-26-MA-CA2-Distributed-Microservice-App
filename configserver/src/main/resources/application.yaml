@@ -11,7 +11,8 @@ spring:
           # search-locations: classpath:/config
           # search-locations: "file:///C://git//config"
         git:
-          uri: "https://github.com/joeaoregan/TUS-26-MA-CA2-Config.git"
+          uri: "https://github.com/joeaoregan/TUS-26-MA-CA2-Config.git" # repo url
+          search-paths: "ca2/config" # specify repo folder to look in 
           username: joeaoregan
           password: ${GIT_PASSWORD}
           default-label: main
@@ -19,7 +20,7 @@ spring:
           clone-on-start: true
           force-pull: true
 encrypt:
-  key: "1c97c571d7473046278f0c242bdb15475c251a72d9ee10e76bfbaed3ee18b742" # Random AES-256 Key
+  key: ${AES_256_KEY} # Random AES-256 Key in IDE Environment Variables
 
 server:
   port: 8071

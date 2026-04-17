@@ -4,7 +4,14 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "inventory")
-public record InventoryContactInfoDto(String message, Map<String, String> contactDetails, List<String> onCallSupport) {
+import lombok.Getter;
+import lombok.Setter;
 
+@ConfigurationProperties(prefix = "inventory")
+@Getter
+@Setter
+public class InventoryContactInfoDto {
+    private String message;
+    private Map<String, String> contactDetails;
+    private List<String> onCallSupport;
 }
