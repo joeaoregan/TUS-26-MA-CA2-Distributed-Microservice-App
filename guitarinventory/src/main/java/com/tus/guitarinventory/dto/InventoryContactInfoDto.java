@@ -10,7 +10,7 @@ import lombok.Setter;
 @ConfigurationProperties(prefix = "inventory")
 @Getter
 @Setter
-public class InventoryContactInfoDto {
+public class InventoryContactInfoDto { // Lab 19: Change to normal class from record
     private String message;
     private Map<String, String> contactDetails;
     private List<String> onCallSupport;

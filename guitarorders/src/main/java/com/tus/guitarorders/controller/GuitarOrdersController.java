@@ -27,7 +27,7 @@ import jakarta.validation.constraints.Pattern; // Lab 7
 //import lombok.AllArgsConstructor; // Lab 10 commented out to implement constructor injection manually
 
 @RestController
-@RequestMapping(path = "/api/guitars", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/orders", produces = MediaType.APPLICATION_JSON_VALUE)
 //@AllArgsConstructor // Lab 10 commented out to implement constructor injection manually
 @Validated
 public class GuitarOrdersController {
