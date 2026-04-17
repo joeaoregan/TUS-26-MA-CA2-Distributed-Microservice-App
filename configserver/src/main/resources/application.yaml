@@ -1,13 +1,25 @@
 spring:
   application:
-    name: configserver
+    name: "configserver"
   profiles:
-    active: native
+    # active: native
+    active: git
   cloud:
     config:
       server:
-        native:
-          search-locations: classpath:/config
+        #native:
+          # search-locations: classpath:/config
+          # search-locations: "file:///C://git//config"
+        git:
+          uri: "https://github.com/joeaoregan/TUS-26-MA-CA2-Config.git"
+          username: joeaoregan
+          password: ${GIT_PASSWORD}
+          default-label: main
+          timeout: 5
+          clone-on-start: true
+          force-pull: true
+encrypt:
+  key: "1c97c571d7473046278f0c242bdb15475c251a72d9ee10e76bfbaed3ee18b742" # Random AES-256 Key
 
 server:
   port: 8071
