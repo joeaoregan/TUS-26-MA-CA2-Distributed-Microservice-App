@@ -16,6 +16,13 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  config:
+    import:
+      - "application_prod.yml"
+      - "application_qa.yml"
+  profiles:
+    active:
+      - "prod"
 # If profiles needed later
 build:
   version: "1.0"
@@ -25,5 +32,5 @@ orders:
     name: "Joe O'Regan - Orders Developer"
     email: "A00258304@student.tus.ie"
   onCallSupport:  
-    - (086) 123-4567
-    - (087) 987-6543
+    - (086) 111-1234
+    - (087) 111-2345

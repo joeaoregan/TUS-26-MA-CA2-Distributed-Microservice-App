@@ -1,0 +1,10 @@
+build:
+  version: "2.2"
+orders:
+  message: "Welcome to guitar inventory related local APIs"
+  contactDetails:
+    name: "Joe O'Regan - Guitar Inventory QA Lead"
+    email: "A00258304@student.tus.ie"
+  onCallSupport:  
+    - (085) 333-5678
+    - (089) 333-6789

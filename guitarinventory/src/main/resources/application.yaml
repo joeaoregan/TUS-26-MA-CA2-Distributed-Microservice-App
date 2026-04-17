@@ -16,9 +16,16 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  config:
+    import:
+      - "application_prod.yml"
+      - "application_qa.yml"
+  profiles:
+    active:
+      - "prod"
 # If profiles needed later
 build:
-  version: "1.0"
+  version: "2.0"
 inventory:
   message: "Welcome to guitar inventory related local APIs"
   contactDetails:
