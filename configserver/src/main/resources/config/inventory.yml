@@ -1,0 +1,10 @@
+build:
+  version: "3.0"
+inventory:
+  message: "Welcome to inventory related local APIs"
+  contactDetails:
+    name: "Joe Bloggs - Inventory Developer"
+    email: "joe@inventory.ie"
+  onCallSupport:
+    - (086) 555-1234
+    - (086) 523-1345

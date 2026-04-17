@@ -1,0 +1,10 @@
+build:
+  version: "2.2"
+orders:
+  message: "Welcome to orders related QA APIs"
+  contactDetails:
+    name: "Jane Bloggs - QA TESTER"
+    email: "jane@orders.ie"
+  onCallSupport:
+    - (090) 555-1234
+    - (090) 523-1345

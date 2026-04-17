@@ -1,0 +1,10 @@
+build:
+  version: "3.2"
+accounts:
+  message: "Welcome to inventory related local APIs"
+  contactDetails:
+    name: "Anna Bloggs - Inventory QA"
+    email: "anna@inventory.ie"
+  onCallSupport:
+    - (452) 456-2176
+    - (452) 764-8934
