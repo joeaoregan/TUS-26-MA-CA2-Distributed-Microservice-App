@@ -1,6 +1,8 @@
 server:
   port: 9090
 spring:
+  profiles:
+    active: "prod"
   application:
     name: guitarinventory
   datasource:
@@ -16,13 +18,6 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-  config:
-    import:
-      - "application_prod.yml"
-      - "application_qa.yml"
-  profiles:
-    active:
-      - "prod"
 # If profiles needed later
 build:
   version: "2.0"
@@ -34,3 +29,19 @@ inventory:
   onCallSupport:  
     - (085) 246-8101
     - (089) 369-1215
+
+# qa profile
+--- 
+spring:
+  config:
+    activate:
+      on-profile: "qa"
+    import: "application_qa.yml"
+
+# prod profile 
+---
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+    import: "application_prod.yml"

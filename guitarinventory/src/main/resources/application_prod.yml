@@ -1,6 +1,6 @@
 build:
   version: "2.1"
-orders:
+inventory:
   message: "Welcome to guitar orders related local APIs"
   contactDetails:
     name: "Joe O'Regan - Guitar Inventory Product Owner"

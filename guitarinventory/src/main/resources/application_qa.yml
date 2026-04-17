@@ -1,6 +1,6 @@
 build:
   version: "2.2"
-orders:
+inventory:
   message: "Welcome to guitar inventory related local APIs"
   contactDetails:
     name: "Joe O'Regan - Guitar Inventory QA Lead"
