@@ -14,13 +14,16 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto:update
+      ddl-auto: update
     show-sql: true
 # If profiles needed later
 build:
   version: "1.0"
-inventory:
-  message: "Welcome to orders related local APIs"
+orders:
+  message: "Welcome to guitar orders related local APIs"
   contactDetails:
     name: "Joe O'Regan - Orders Developer"
     email: "A00258304@student.tus.ie"
+  onCallSupport:  
+    - (086) 123-4567
+    - (087) 987-6543

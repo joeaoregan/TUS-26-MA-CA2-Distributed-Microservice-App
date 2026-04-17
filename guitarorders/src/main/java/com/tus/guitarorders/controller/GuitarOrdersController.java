@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tus.guitarorders.constants.GuitarOrdersConstants;
 import com.tus.guitarorders.dto.CustomerDto;
+import com.tus.guitarorders.dto.OrdersContactInfoDto;
 import com.tus.guitarorders.dto.ResponseDto;
 import com.tus.guitarorders.service.IGuitarOrdersService;
 
@@ -32,6 +33,7 @@ import jakarta.validation.constraints.Pattern; // Lab 7
 public class GuitarOrdersController {
 
 	private IGuitarOrdersService iGuitarOrdersService;
+	private OrdersContactInfoDto ordersContactInfoDto; // Lab 11 - Inject OrdersContactInfoDto using constructor injection	
 
 	@Value("${build.version}")
 	private String buildVersion;
@@ -40,9 +42,15 @@ public class GuitarOrdersController {
 	private Environment environment; // Lab 11 configuration properties using Environment
 	
 	// Lab 10 - Implement constructor injection for IGuitarOrdersService
-	public GuitarOrdersController(IGuitarOrdersService iGuitarOrdersService) {
+	public GuitarOrdersController(IGuitarOrdersService iGuitarOrdersService, OrdersContactInfoDto ordersContactInfoDto) {
 		this.iGuitarOrdersService = iGuitarOrdersService;
+		this.ordersContactInfoDto = ordersContactInfoDto; // Lab 11
 	}
+	
+   @GetMapping("/contact-info")
+    public ResponseEntity<OrdersContactInfoDto> getContactInfo() {
+        return ResponseEntity.status(HttpStatus.OK).body(ordersContactInfoDto);
+    }
 	
 	@GetMapping("/java-version")
     public ResponseEntity<String> getJavaVersion() { // Lab 11
@@ -56,7 +64,7 @@ public class GuitarOrdersController {
 
 	@GetMapping("/sayHello")
 	public String sayHello() {
-		return "Hello World";
+		return "Hello World, Guitar Orders Service is up and running!";
 	}
 
 	@GetMapping()

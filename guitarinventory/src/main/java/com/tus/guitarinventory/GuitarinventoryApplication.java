@@ -2,10 +2,14 @@ package com.tus.guitarinventory;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing; // Lab 7
+
+import com.tus.guitarinventory.dto.InventoryContactInfoDto;
 
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditAwareImpl") // Lab 7
+@EnableConfigurationProperties(value = { InventoryContactInfoDto.class }) // Lab 11 - Enable configuration properties
 public class GuitarinventoryApplication {
 
 	public static void main(String[] args) {

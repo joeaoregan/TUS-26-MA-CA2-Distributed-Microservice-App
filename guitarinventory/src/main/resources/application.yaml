@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 9090
 spring:
   application:
     name: guitarinventory
@@ -20,7 +20,10 @@ spring:
 build:
   version: "1.0"
 inventory:
-  message: "Welcome to inventory related local APIs"
+  message: "Welcome to guitar inventory related local APIs"
   contactDetails:
-    name: "Joe O'Regan - Inventory Developer"
+    name: "Joe O'Regan - Inventory Lead"
     email: "A00258304@student.tus.ie"
+  onCallSupport:  
+    - (085) 246-8101
+    - (089) 369-1215
