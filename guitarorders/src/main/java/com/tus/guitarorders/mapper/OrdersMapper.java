@@ -1,6 +1,7 @@
 // Lab 3
 package com.tus.guitarorders.mapper;
 
+import com.tus.guitarorders.dto.OrderDetailsDto;
 import com.tus.guitarorders.dto.OrdersDto;
 import com.tus.guitarorders.entity.Orders;
 
@@ -20,5 +21,12 @@ public class OrdersMapper {
         orders.setStatus(ordersDto.getStatus());
         orders.setQuantity(ordersDto.getQuantity());
         return orders;
+    }
+
+    public static OrderDetailsDto mapToOrderDetailsDto(Orders orders, OrderDetailsDto orderDetailsDto) {
+        orderDetailsDto.setSerialNumber(orders.getSerialNumber());
+        orderDetailsDto.setStatus(orders.getStatus());
+        orderDetailsDto.setQuantity(orders.getQuantity());
+        return orderDetailsDto;
     }
 }

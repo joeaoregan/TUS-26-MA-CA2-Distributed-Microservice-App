@@ -69,7 +69,7 @@ public class GuitarOrdersController {
 
     @GetMapping()
     public ResponseEntity<CustomerDto> fetchOrderDetails(
-            @RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Serial number must be 10 digits") String serialNumber) { // Lab
+            @RequestParam @Pattern(regexp = "^[A-Z0-9]{8,12}$", message = "Serial number must be 8-12 alphanumeric characters") String serialNumber) { // Lab
         // 7
         CustomerDto customerDto = iGuitarOrdersService.fetchOrder(serialNumber);
         return ResponseEntity.status(HttpStatus.OK).body(customerDto);
@@ -97,8 +97,7 @@ public class GuitarOrdersController {
 
     @DeleteMapping()
     public ResponseEntity<ResponseDto> deleteOrderDetails(
-            @RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits") String serialNumber) { // Lab
-        // 7
+            @RequestParam @Pattern(regexp = "^[A-Z0-9]{8,12}$", message = "Serial number must be 8-12 alphanumeric characters") String serialNumber) { // Lab 7
         boolean isDeleted = iGuitarOrdersService.deleteOrder(serialNumber);
         if (isDeleted) {
             return ResponseEntity.status(HttpStatus.OK)

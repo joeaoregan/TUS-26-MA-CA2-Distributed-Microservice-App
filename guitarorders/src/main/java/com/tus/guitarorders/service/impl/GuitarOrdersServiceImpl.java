@@ -11,6 +11,7 @@ import com.tus.guitarorders.constants.GuitarOrdersConstants;
 import com.tus.guitarorders.dto.CustomerDetailsDto;
 import com.tus.guitarorders.dto.CustomerDto;
 import com.tus.guitarorders.dto.InventoryDto;
+import com.tus.guitarorders.dto.OrderDetailsDto;
 import com.tus.guitarorders.dto.OrdersDto;
 import com.tus.guitarorders.entity.Customer;
 import com.tus.guitarorders.entity.Orders;
@@ -107,11 +108,26 @@ public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
 
         CustomerDetailsDto customerDetailsDto = CustomerMapper.mapToCustomerDetailsDto(customer, new CustomerDetailsDto());
 
+//        String serialNumber = customer.getOrders().get(0).getSerialNumber(); 
+//        ResponseEntity<InventoryDto> inventoryDto = inventoryFeignClient.fetchInventoryDetails(serialNumber);
         ResponseEntity<InventoryDto> inventoryDto = inventoryFeignClient.fetchInventoryDetails("FEN12345678");
         if (inventoryDto != null && inventoryDto.getStatusCode().is2xxSuccessful()) {
             customerDetailsDto.setInventoryDto(inventoryDto.getBody());
         }
 
         return customerDetailsDto;
+    }
+
+    public OrderDetailsDto fetchOrderDetails(String serialNumber) {
+        Orders orders = ordersRepository.findBySerialNumber(serialNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "serialNumber", serialNumber));
+        OrderDetailsDto orderDetailsDto = OrdersMapper.mapToOrderDetailsDto(orders, new OrderDetailsDto());
+
+        ResponseEntity<InventoryDto> inventoryDto = inventoryFeignClient.fetchInventoryDetails(serialNumber);
+        if (inventoryDto != null && inventoryDto.getStatusCode().is2xxSuccessful()) {
+            orderDetailsDto.setInventoryDto(inventoryDto.getBody());
+        }
+
+        return orderDetailsDto;
     }
 }
