@@ -32,80 +32,80 @@ import jakarta.validation.constraints.Pattern; // Lab 7
 @Validated
 public class GuitarOrdersController {
 
-	private IGuitarOrdersService iGuitarOrdersService;
-	private OrdersContactInfoDto ordersContactInfoDto; // Lab 11 - Inject OrdersContactInfoDto using constructor injection	
+    private IGuitarOrdersService iGuitarOrdersService;
+    private OrdersContactInfoDto ordersContactInfoDto; // Lab 11 - Inject OrdersContactInfoDto using constructor injection	
 
-	@Value("${build.version}")
-	private String buildVersion;
-	
-	@Autowired
-	private Environment environment; // Lab 11 configuration properties using Environment
-	
-	// Lab 10 - Implement constructor injection for IGuitarOrdersService
-	public GuitarOrdersController(IGuitarOrdersService iGuitarOrdersService, OrdersContactInfoDto ordersContactInfoDto) {
-		this.iGuitarOrdersService = iGuitarOrdersService;
-		this.ordersContactInfoDto = ordersContactInfoDto; // Lab 11
-	}
-	
-   @GetMapping("/contact-info")
+    @Value("${build.version}")
+    private String buildVersion;
+
+    @Autowired
+    private Environment environment; // Lab 11 configuration properties using Environment
+
+    // Lab 10 - Implement constructor injection for IGuitarOrdersService
+    public GuitarOrdersController(IGuitarOrdersService iGuitarOrdersService, OrdersContactInfoDto ordersContactInfoDto) {
+        this.iGuitarOrdersService = iGuitarOrdersService;
+        this.ordersContactInfoDto = ordersContactInfoDto; // Lab 11
+    }
+
+    @GetMapping("/contact-info")
     public ResponseEntity<OrdersContactInfoDto> getContactInfo() {
         return ResponseEntity.status(HttpStatus.OK).body(ordersContactInfoDto);
     }
-	
-	@GetMapping("/java-version")
+
+    @GetMapping("/java-version")
     public ResponseEntity<String> getJavaVersion() { // Lab 11
         return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("JAVA_HOME"));
     }
 
-	@GetMapping("/build-info")
-	public ResponseEntity<String> getBuildInfo() {
-		return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
-	}
+    @GetMapping("/build-info")
+    public ResponseEntity<String> getBuildInfo() {
+        return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+    }
 
-	@GetMapping("/sayHello")
-	public String sayHello() {
-		return "Hello World, Guitar Orders Service is up and running!";
-	}
+    @GetMapping("/sayHello")
+    public String sayHello() {
+        return "Hello World, Guitar Orders Service is up and running!";
+    }
 
-	@GetMapping()
-	public ResponseEntity<CustomerDto> fetchOrderDetails(
-			@RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits") String mobileNumber) { // Lab
-																																	// 7
-		CustomerDto customerDto = iGuitarOrdersService.fetchOrder(mobileNumber);
-		return ResponseEntity.status(HttpStatus.OK).body(customerDto);
-	}
+    @GetMapping()
+    public ResponseEntity<CustomerDto> fetchOrderDetails(
+            @RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Serial number must be 10 digits") String serialNumber) { // Lab
+        // 7
+        CustomerDto customerDto = iGuitarOrdersService.fetchOrder(serialNumber);
+        return ResponseEntity.status(HttpStatus.OK).body(customerDto);
+    }
 
-	// Lab 3
-	@PostMapping()
-	public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) { // Lab 7
-		iGuitarOrdersService.createOrder(customerDto);
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(new ResponseDto(GuitarOrdersConstants.STATUS_201, GuitarOrdersConstants.MESSAGE_201));
-	}
+    // Lab 3
+    @PostMapping()
+    public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) { // Lab 7
+        iGuitarOrdersService.createOrder(customerDto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ResponseDto(GuitarOrdersConstants.STATUS_201, GuitarOrdersConstants.MESSAGE_201));
+    }
 
-	@PutMapping()
-	public ResponseEntity<ResponseDto> updateOrderDetails(@Valid @RequestBody CustomerDto customerDto) { // Lab 7
-		boolean isUpdated = iGuitarOrdersService.updateOrder(customerDto);
-		if (isUpdated) {
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(new ResponseDto(GuitarOrdersConstants.STATUS_200, GuitarOrdersConstants.MESSAGE_200));
-		} else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ResponseDto(GuitarOrdersConstants.STATUS_500, GuitarOrdersConstants.MESSAGE_500));
-		}
-	}
+    @PutMapping()
+    public ResponseEntity<ResponseDto> updateOrderDetails(@Valid @RequestBody CustomerDto customerDto) { // Lab 7
+        boolean isUpdated = iGuitarOrdersService.updateOrder(customerDto);
+        if (isUpdated) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseDto(GuitarOrdersConstants.STATUS_200, GuitarOrdersConstants.MESSAGE_200));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDto(GuitarOrdersConstants.STATUS_500, GuitarOrdersConstants.MESSAGE_500));
+        }
+    }
 
-	@DeleteMapping()
-	public ResponseEntity<ResponseDto> deleteOrderDetails(
-			@RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits") String mobileNumber) { // Lab
-																																	// 7
-		boolean isDeleted = iGuitarOrdersService.deleteOrder(mobileNumber);
-		if (isDeleted) {
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(new ResponseDto(GuitarOrdersConstants.STATUS_200, GuitarOrdersConstants.MESSAGE_200));
-		} else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ResponseDto(GuitarOrdersConstants.STATUS_500, GuitarOrdersConstants.MESSAGE_500));
-		}
-	}
+    @DeleteMapping()
+    public ResponseEntity<ResponseDto> deleteOrderDetails(
+            @RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits") String serialNumber) { // Lab
+        // 7
+        boolean isDeleted = iGuitarOrdersService.deleteOrder(serialNumber);
+        if (isDeleted) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseDto(GuitarOrdersConstants.STATUS_200, GuitarOrdersConstants.MESSAGE_200));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDto(GuitarOrdersConstants.STATUS_500, GuitarOrdersConstants.MESSAGE_500));
+        }
+    }
 }

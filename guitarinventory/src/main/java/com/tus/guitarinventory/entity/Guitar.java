@@ -13,8 +13,11 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "guitar")
-@Getter @Setter @ToString 
-@AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class Guitar extends BaseEntity {
 
     @Id

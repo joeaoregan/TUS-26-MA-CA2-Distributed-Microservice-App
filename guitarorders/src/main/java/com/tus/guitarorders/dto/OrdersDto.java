@@ -15,8 +15,8 @@ public class OrdersDto {
     @Max(value = 9999999999L, message = "OrderNumber must be 10 digits") // Lab 7
     private Long orderNumber;
 
-    @NotNull(message = "GuitarId cannot be null") // Lab 7
-    private Long guitarId;
+    @NotNull(message = "SerialNumber cannot be null") // Lab 7
+    private String serialNumber;
 
     @Positive(message = "Quantity must be greater than zero") // Lab 7
     private Integer quantity;

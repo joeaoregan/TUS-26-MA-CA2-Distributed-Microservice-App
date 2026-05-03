@@ -25,7 +25,7 @@ public class Orders extends BaseEntity {
     private Long customerId;
 
     @Column(name = "serial_number")
-    private String serialNumber;
+    private String serialNumber; // Connects to Inventory
 
     @Column(name = "quantity")
     private Integer quantity;

@@ -15,8 +15,8 @@ import com.tus.guitarorders.exception.CustomerAlreadyExistsException;
 import com.tus.guitarorders.exception.ResourceNotFoundException;
 import com.tus.guitarorders.mapper.CustomerMapper;
 import com.tus.guitarorders.mapper.OrdersMapper;
-import com.tus.guitarorders.repository.OrdersRepository;
 import com.tus.guitarorders.repository.CustomerRepository;
+import com.tus.guitarorders.repository.OrdersRepository;
 import com.tus.guitarorders.service.IGuitarOrdersService;
 
 import lombok.AllArgsConstructor;
@@ -30,14 +30,14 @@ public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
 
     //@Override
     public void createOrder(CustomerDto customerDto) {
-    		Customer customer = CustomerMapper.mapToCustomer(customerDto, new Customer());
-    		Optional<Customer> optionalcustomer = customerRepository.findByMobileNumber(customerDto.getMobileNumber());
-    		if (optionalcustomer.isPresent()) {
-                throw new CustomerAlreadyExistsException(
-                        GuitarOrdersConstants.MESSAGE_400_CUSTOMER_ALREADY_EXISTS + customerDto.getMobileNumber());
-            }
-		Customer savedCustomer = customerRepository.save(customer);
-		ordersRepository.save(createNewOrder(savedCustomer));
+        Customer customer = CustomerMapper.mapToCustomer(customerDto, new Customer());
+        Optional<Customer> optionalcustomer = customerRepository.findByMobileNumber(customerDto.getMobileNumber());
+        if (optionalcustomer.isPresent()) {
+            throw new CustomerAlreadyExistsException(
+                    GuitarOrdersConstants.MESSAGE_400_CUSTOMER_ALREADY_EXISTS + customerDto.getMobileNumber());
+        }
+        Customer savedCustomer = customerRepository.save(customer);
+        ordersRepository.save(createNewOrder(savedCustomer));
     }
 
     /**
@@ -52,19 +52,19 @@ public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
         newOrder.setStatus(GuitarOrdersConstants.PENDING);
         newOrder.setQuantity(1);
         return newOrder;
-    }    
-    
+    }
+
     @Override
-    public CustomerDto fetchOrder(String mobileNumber) {
-        Customer customer = customerRepository.findByMobileNumber(mobileNumber)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
-        Orders orders = ordersRepository.findByCustomerId(customer.getCustomerId()).orElseThrow(
-                () -> new ResourceNotFoundException("Order", "customerId", customer.getCustomerId().toString()));
+    public CustomerDto fetchOrder(String serialNumber) {
+        Orders orders = ordersRepository.findBySerialNumber(serialNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "serialNumber", serialNumber));
+        Customer customer = customerRepository.findById(orders.getCustomerId())
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", "customerId", orders.getCustomerId().toString()));
         CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
         customerDto.setOrdersDto(OrdersMapper.mapToOrdersDto(orders, new OrdersDto()));
         return customerDto;
     }
-    
+
     @Override
     public boolean updateOrder(CustomerDto customerDto) {
         boolean isUpdated = false;
@@ -85,7 +85,6 @@ public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
         }
         return isUpdated;
     }
-
 
     @Override
     public boolean deleteOrder(String mobileNumber) {

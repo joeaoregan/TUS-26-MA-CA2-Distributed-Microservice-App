@@ -12,6 +12,8 @@ import com.tus.guitarorders.entity.Orders;
 public interface OrdersRepository extends JpaRepository<Orders, Long> {
 
 	Optional<Orders> findByCustomerId(Long customerId);
+	
+	Optional<Orders> findBySerialNumber(String serialNumber);
 
 	@Transactional
 	@Modifying
