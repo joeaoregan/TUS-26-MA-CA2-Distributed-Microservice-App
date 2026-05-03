@@ -4,10 +4,13 @@ package com.tus.guitarorders.service.impl;
 import java.util.Optional;
 import java.util.Random;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.tus.guitarorders.constants.GuitarOrdersConstants;
+import com.tus.guitarorders.dto.CustomerDetailsDto;
 import com.tus.guitarorders.dto.CustomerDto;
+import com.tus.guitarorders.dto.InventoryDto;
 import com.tus.guitarorders.dto.OrdersDto;
 import com.tus.guitarorders.entity.Customer;
 import com.tus.guitarorders.entity.Orders;
@@ -18,6 +21,7 @@ import com.tus.guitarorders.mapper.OrdersMapper;
 import com.tus.guitarorders.repository.CustomerRepository;
 import com.tus.guitarorders.repository.OrdersRepository;
 import com.tus.guitarorders.service.IGuitarOrdersService;
+import com.tus.guitarorders.service.client.InventoryFeignClient;
 
 import lombok.AllArgsConstructor;
 
@@ -25,6 +29,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
 
+    private InventoryFeignClient inventoryFeignClient;
     private OrdersRepository ordersRepository;
     private CustomerRepository customerRepository;
 
@@ -93,5 +98,20 @@ public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
         ordersRepository.deleteByCustomerId(customer.getCustomerId());
         customerRepository.deleteById(customer.getCustomerId());
         return true;
+    }
+
+    // Lab 24
+    public CustomerDetailsDto fetchCustomerDetails(String mobileNumber) {
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
+
+        CustomerDetailsDto customerDetailsDto = CustomerMapper.mapToCustomerDetailsDto(customer, new CustomerDetailsDto());
+
+        ResponseEntity<InventoryDto> inventoryDto = inventoryFeignClient.fetchInventoryDetails("FEN12345678");
+        if (inventoryDto != null && inventoryDto.getStatusCode().is2xxSuccessful()) {
+            customerDetailsDto.setInventoryDto(inventoryDto.getBody());
+        }
+
+        return customerDetailsDto;
     }
 }
