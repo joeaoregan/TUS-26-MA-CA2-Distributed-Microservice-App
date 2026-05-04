@@ -9,7 +9,10 @@ spring:
         locator:
           enabled: false # lab 27 Step 6
           lowerCaseServiceId: true # lab 27
-management:
+management:  
+  health:
+    circuitbreakers:
+      enabled: true # lab 29
   endpoints:
     web:
       exposure:
@@ -42,3 +45,12 @@ logging:
     com:
       tus:
         gatewayserver: DEBUG
+        
+# Lab 29 Circuit Breaker
+resilience4j.circuitbreaker:
+  configs:
+    default: # only 1 configured
+      slidingWindowSize: 10 # The number of calls monitored
+      permittedNumberOfCallsInHalfOpenState: 2 # number going through in half-open state
+      failureRateThreshold: 50 # failure threshold
+      waitDurationInOpenState: 10000 # how long it waits in open state before it tries again (10 seconds)

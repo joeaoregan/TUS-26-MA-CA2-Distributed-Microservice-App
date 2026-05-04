@@ -29,13 +29,16 @@ public class GatewayserverApplication {
 	 */
 	@Bean
 	RouteLocator guitarRouteConfig(RouteLocatorBuilder routeLocatorBuilder) {
-		return routeLocatorBuilder.routes().route(p -> p.path("/guitar/orders/**")
-				.filters(f -> f.rewritePath("/guitar/orders/(?<segment>.*)", "/${segment}")
-						.addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-				.uri("lb://ORDERS"))
+		return routeLocatorBuilder.routes()
+				.route(p -> p.path("/guitar/orders/**")
+						.filters(f -> f.rewritePath("/guitar/orders/(?<segment>.*)", "/${segment}")
+								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
+								.circuitBreaker(config -> config.setName("ordersCircuitBreaker"))) // Lab 29
+						.uri("lb://ORDERS"))
 				.route(p -> p.path("/guitar/inventory/**")
 						.filters(f -> f.rewritePath("/guitar/inventory/(?<segment>.*)", "/${segment}")
-								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
+								.circuitBreaker(config -> config.setName("inventoryCircuitBreaker"))) // Lab 29
 						.uri("lb://INVENTORY"))
 				.build();
 	}
