@@ -119,12 +119,11 @@ public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
 	public CustomerDto fetchOrder(String serialNumber) {
 		Orders orders = ordersRepository.findBySerialNumber(serialNumber)
 				.orElseThrow(() -> new ResourceNotFoundException("Order", "serialNumber", serialNumber));
-//        Customer customer = customerRepository.findById(orders.getCustomerId())
-//                .orElseThrow(() -> new ResourceNotFoundException("Customer", "customerId", orders.getCustomerId().toString()));
+
 		Customer customer = orders.getCustomer();
 
 		if (customer == null) {
-			throw new ResourceNotFoundException("Customer", "Order", serialNumber);
+			throw new ResourceNotFoundException("Customer", "Order Serial Number", serialNumber);
 		}
 		CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
 		customerDto.setOrdersDto(OrdersMapper.mapToOrdersDto(orders, new OrdersDto()));

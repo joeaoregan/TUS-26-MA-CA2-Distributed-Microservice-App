@@ -83,7 +83,7 @@ public class GuitarOrdersController {
 	}
 
 	/**
-	 * Fetch order details based on the provided serial number.
+	 * Fetch order details based on the provided serial number. Lab 7 - Added.
 	 * 
 	 * @param serialNumber The serial number of the guitar order to be fetched
 	 * @return ResponseEntity containing the CustomerDto with order details and HTTP
@@ -91,10 +91,9 @@ public class GuitarOrdersController {
 	 */
 	@GetMapping("/{serialNumber}")
 	public ResponseEntity<CustomerDto> fetchOrderDetails(
-			@PathVariable @Pattern(regexp = "^[A-Z0-9]{8,12}$", message = "Serial number must be 8-12 alphanumeric characters") String serialNumber) { // Lab
-		// 7
-		CustomerDto customerDto = iGuitarOrdersService.fetchOrder(serialNumber);
-		return ResponseEntity.status(HttpStatus.OK).body(customerDto);
+			@PathVariable @Pattern(regexp = "^[A-Z0-9]{8,12}$", message = "Serial number must be 8-12 alphanumeric characters") String serialNumber) {
+	    CustomerDto customerDto = iGuitarOrdersService.fetchOrder(serialNumber);
+	    return ResponseEntity.status(HttpStatus.OK).body(customerDto);
 	}
 
 	/**

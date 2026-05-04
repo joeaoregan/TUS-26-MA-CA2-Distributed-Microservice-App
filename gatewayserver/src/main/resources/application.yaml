@@ -7,7 +7,8 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true
+          enabled: false # lab 27 Step 6
+          lowerCaseServiceId: true # lab 27
 management:
   endpoints:
     web:
