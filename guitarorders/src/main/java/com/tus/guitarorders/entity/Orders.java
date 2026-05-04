@@ -3,6 +3,8 @@ package com.tus.guitarorders.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,8 +23,8 @@ public class Orders extends BaseEntity {
     @Column(name = "order_number")
     private Long orderNumber;
 
-    @Column(name = "customer_id")
-    private Long customerId;
+//    @Column(name = "customer_id")
+//    private Long customerId;
 
     @Column(name = "serial_number")
     private String serialNumber; // Connects to Inventory
@@ -32,4 +34,8 @@ public class Orders extends BaseEntity {
 
     @Column(name = "status")
     private String status;
+    
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 }

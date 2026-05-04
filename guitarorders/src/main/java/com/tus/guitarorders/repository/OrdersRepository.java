@@ -11,11 +11,28 @@ import com.tus.guitarorders.entity.Orders;
 @Repository
 public interface OrdersRepository extends JpaRepository<Orders, Long> {
 
-	Optional<Orders> findByCustomerId(Long customerId);
-	
+	/**
+	 * Orders is linked to Customer via a ManyToOne relationship, we can use the
+	 * customer's ID to find the order. The method name follows Spring Data JPA's
+	 * naming conventions, allowing it to automatically generate the query.
+	 */
+	Optional<Orders> findByCustomerCustomerId(Long customerId);
+
+	/**
+	 * Find an order by its serial number. The method name follows Spring Data JPA's
+	 * naming conventions, allowing it to automatically generate the query.
+	 */
 	Optional<Orders> findBySerialNumber(String serialNumber);
 
+	/**
+	 * Delete an order by the customer's ID. The method name follows Spring Data
+	 * JPA's naming conventions, allowing it to automatically generate the query.
+	 * The
+	 * 
+	 * @Modifying annotation indicates that this method will perform a delete
+	 *            operation, and @Transactional ensures that the operation is
+	 *            executed within a transaction.
+	 */
 	@Transactional
-	@Modifying
-	void deleteByCustomerId(Long customerId);
+	void deleteByCustomerCustomerId(Long customerId);
 }

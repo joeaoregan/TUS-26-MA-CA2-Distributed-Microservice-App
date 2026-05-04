@@ -1,5 +1,7 @@
 package com.tus.guitarorders.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tus.guitarorders.constants.GuitarOrdersConstants;
 import com.tus.guitarorders.dto.CustomerDto;
 import com.tus.guitarorders.dto.OrdersContactInfoDto;
+import com.tus.guitarorders.dto.OrdersDto;
 import com.tus.guitarorders.dto.ResponseDto;
 import com.tus.guitarorders.service.IGuitarOrdersService;
 
@@ -32,79 +36,136 @@ import jakarta.validation.constraints.Pattern; // Lab 7
 @Validated
 public class GuitarOrdersController {
 
-    private IGuitarOrdersService iGuitarOrdersService;
-    private OrdersContactInfoDto ordersContactInfoDto; // Lab 11 - Inject OrdersContactInfoDto using constructor injection	
+	/**
+	 * Guitar Orders service to handle business logic related to guitar orders
+	 * management. Lab 3 - Implemented IGuitarOrdersService and used it in this
+	 * controller
+	 */
+	private IGuitarOrdersService iGuitarOrdersService;
+	
+	/**
+	 * Orders contact information DTO Lab 11 - Inject OrdersContactInfoDto using
+	 * constructor injection
+	 */
+	private OrdersContactInfoDto ordersContactInfoDto;
 
-    @Value("${build.version}")
-    private String buildVersion;
+	@Value("${build.version}")
+	private String buildVersion;
 
-    @Autowired
-    private Environment environment; // Lab 11 configuration properties using Environment
+	@Autowired
+	private Environment environment; // Lab 11 configuration properties using Environment
 
-    // Lab 10 - Implement constructor injection for IGuitarOrdersService
-    public GuitarOrdersController(IGuitarOrdersService iGuitarOrdersService, OrdersContactInfoDto ordersContactInfoDto) {
-        this.iGuitarOrdersService = iGuitarOrdersService;
-        this.ordersContactInfoDto = ordersContactInfoDto; // Lab 11
-    }
+	// Lab 10 - Implement constructor injection for IGuitarOrdersService
+	public GuitarOrdersController(IGuitarOrdersService iGuitarOrdersService,
+			OrdersContactInfoDto ordersContactInfoDto) {
+		this.iGuitarOrdersService = iGuitarOrdersService;
+		this.ordersContactInfoDto = ordersContactInfoDto; // Lab 11
+	}
 
-    @GetMapping("/contact-info")
-    public ResponseEntity<OrdersContactInfoDto> getContactInfo() {
-        return ResponseEntity.status(HttpStatus.OK).body(ordersContactInfoDto);
-    }
+	@GetMapping("/contact-info")
+	public ResponseEntity<OrdersContactInfoDto> getContactInfo() {
+		return ResponseEntity.status(HttpStatus.OK).body(ordersContactInfoDto);
+	}
 
-    @GetMapping("/java-version")
-    public ResponseEntity<String> getJavaVersion() { // Lab 11
-        return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("JAVA_HOME"));
-    }
+	@GetMapping("/java-version")
+	public ResponseEntity<String> getJavaVersion() { // Lab 11
+		return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("JAVA_HOME"));
+	}
 
-    @GetMapping("/build-info")
-    public ResponseEntity<String> getBuildInfo() {
-        return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
-    }
+	@GetMapping("/build-info")
+	public ResponseEntity<String> getBuildInfo() {
+		return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+	}
 
-    @GetMapping("/sayHello")
-    public String sayHello() {
-        return "Hello World, Guitar Orders Service is up and running!";
-    }
+	@GetMapping("/sayHello")
+	public String sayHello() {
+		return "Hello World, Guitar Orders Service is up and running!";
+	}
 
-    @GetMapping()
-    public ResponseEntity<CustomerDto> fetchOrderDetails(
-            @RequestParam @Pattern(regexp = "^[A-Z0-9]{8,12}$", message = "Serial number must be 8-12 alphanumeric characters") String serialNumber) { // Lab
-        // 7
-        CustomerDto customerDto = iGuitarOrdersService.fetchOrder(serialNumber);
-        return ResponseEntity.status(HttpStatus.OK).body(customerDto);
-    }
+	/**
+	 * Fetch order details based on the provided serial number.
+	 * 
+	 * @param serialNumber The serial number of the guitar order to be fetched
+	 * @return ResponseEntity containing the CustomerDto with order details and HTTP
+	 *         status
+	 */
+	@GetMapping("/{serialNumber}")
+	public ResponseEntity<CustomerDto> fetchOrderDetails(
+			@PathVariable @Pattern(regexp = "^[A-Z0-9]{8,12}$", message = "Serial number must be 8-12 alphanumeric characters") String serialNumber) { // Lab
+		// 7
+		CustomerDto customerDto = iGuitarOrdersService.fetchOrder(serialNumber);
+		return ResponseEntity.status(HttpStatus.OK).body(customerDto);
+	}
 
-    // Lab 3
-    @PostMapping()
-    public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) { // Lab 7
-        iGuitarOrdersService.createOrder(customerDto);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseDto(GuitarOrdersConstants.STATUS_201, GuitarOrdersConstants.MESSAGE_201));
-    }
+	/**
+	 * Fetch details of all guitar orders.
+	 * 
+	 * @return ResponseEntity containing a list of CustomerDto objects for all
+	 *         orders and HTTP status
+	 */
+	@GetMapping()
+	public ResponseEntity<List<CustomerDto>> fetchAllOrders() {
+		List<CustomerDto> orders = iGuitarOrdersService.fetchAllOrders();
+		return ResponseEntity.status(HttpStatus.OK).body(orders);
+	}
 
-    @PutMapping()
-    public ResponseEntity<ResponseDto> updateOrderDetails(@Valid @RequestBody CustomerDto customerDto) { // Lab 7
-        boolean isUpdated = iGuitarOrdersService.updateOrder(customerDto);
-        if (isUpdated) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseDto(GuitarOrdersConstants.STATUS_200, GuitarOrdersConstants.MESSAGE_200));
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseDto(GuitarOrdersConstants.STATUS_500, GuitarOrdersConstants.MESSAGE_500));
-        }
-    }
+	/**
+	 * Create a new guitar order based on the provided customer details and order
+	 * information. Lab 3 - Implemented createOrder method in IGuitarOrdersService
+	 * and used it in this controller method
+	 * 
+	 * @param customerDto The details of the customer and order to be created
+	 * @return ResponseEntity with HTTP status indicating the result of the create
+	 *         operation
+	 */
+	@PostMapping()
+	public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) { // Lab 7
+		iGuitarOrdersService.createOrder(customerDto);
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(new ResponseDto(GuitarOrdersConstants.STATUS_201, GuitarOrdersConstants.MESSAGE_201));
+	}
 
-    @DeleteMapping()
-    public ResponseEntity<ResponseDto> deleteOrderDetails(
-            @RequestParam @Pattern(regexp = "^[A-Z0-9]{8,12}$", message = "Serial number must be 8-12 alphanumeric characters") String serialNumber) { // Lab 7
-        boolean isDeleted = iGuitarOrdersService.deleteOrder(serialNumber);
-        if (isDeleted) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseDto(GuitarOrdersConstants.STATUS_200, GuitarOrdersConstants.MESSAGE_200));
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseDto(GuitarOrdersConstants.STATUS_500, GuitarOrdersConstants.MESSAGE_500));
-        }
-    }
+	/**
+	 * Update an existing guitar order based on the provided customer details and
+	 * order information. Lab 7 - Implemented updateOrder method in
+	 * IGuitarOrdersService and used it in this controller method
+	 * 
+	 * @param customerDto The details of the customer and order to be updated
+	 * @return ResponseEntity with HTTP status indicating the result of the update
+	 *         operation
+	 */
+	@PutMapping()
+	public ResponseEntity<ResponseDto> updateOrderDetails(@Valid @RequestBody CustomerDto customerDto) {
+		boolean isUpdated = iGuitarOrdersService.updateOrder(customerDto);
+		if (isUpdated) {
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new ResponseDto(GuitarOrdersConstants.STATUS_200, GuitarOrdersConstants.MESSAGE_200));
+		} else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ResponseDto(GuitarOrdersConstants.STATUS_500, GuitarOrdersConstants.MESSAGE_500));
+		}
+	}
+
+	/**
+	 * Delete an existing guitar order based on the provided serial number. Lab 7 -
+	 * Implemented deleteOrder method in IGuitarOrdersService and used it in this
+	 * controller method
+	 * 
+	 * @param serialNumber The serial number of the guitar order to be deleted
+	 * @return ResponseEntity with HTTP status indicating the result of the delete
+	 *         operation
+	 */
+	@DeleteMapping()
+	public ResponseEntity<ResponseDto> deleteOrderDetails(
+			@RequestParam @Pattern(regexp = "^[A-Z0-9]{8,12}$", message = "Serial number must be 8-12 alphanumeric characters") String serialNumber) { // Lab
+																																						// 7
+		boolean isDeleted = iGuitarOrdersService.deleteOrder(serialNumber);
+		if (isDeleted) {
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new ResponseDto(GuitarOrdersConstants.STATUS_200, GuitarOrdersConstants.MESSAGE_200));
+		} else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ResponseDto(GuitarOrdersConstants.STATUS_500, GuitarOrdersConstants.MESSAGE_500));
+		}
+	}
 }
