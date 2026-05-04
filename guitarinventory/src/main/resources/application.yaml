@@ -50,3 +50,9 @@ info:
     name: "orders"
     description: "Microservices Architecture CA2: Guitar Inventory Application"
     version: "1.1.0"
+    
+logging:
+  level:
+    com:
+      tus:
+        guitarinventory: DEBUG
