@@ -5,7 +5,7 @@ spring:
     compatibility-verifier:
       enabled: false # lab 16: disable version check
   application:
-    name: "orders" # this is the endpoint
+    name: "orders" # this is the endpoint (name visible in Eureka)
   profiles:
     active: "prod"
   datasource:

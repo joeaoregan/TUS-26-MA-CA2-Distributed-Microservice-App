@@ -36,7 +36,7 @@ public class CustomersServiceImpl implements ICustomersService {
 
         CustomerDetailsDto customerDetailsDto = CustomerMapper.mapToCustomerDetailsDto(customer,
                 new CustomerDetailsDto());
-        customerDetailsDto.setOrderDto(OrdersMapper.mapToOrdersDto(orders, new OrdersDto()));
+        customerDetailsDto.setOrdersDto(OrdersMapper.mapToOrdersDto(orders, new OrdersDto()));
 
         ResponseEntity<InventoryDto> inventoryDtoResponseEntity = inventoryFeignClient.fetchInventoryDetails(orders.getSerialNumber());
         customerDetailsDto.setInventoryDto(inventoryDtoResponseEntity.getBody());
