@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tus.guitarorders.constants.GuitarOrdersConstants;
 import com.tus.guitarorders.dto.CustomerDto;
 import com.tus.guitarorders.dto.OrdersContactInfoDto;
-import com.tus.guitarorders.dto.OrdersDto;
 import com.tus.guitarorders.dto.ResponseDto;
 import com.tus.guitarorders.service.IGuitarOrdersService;
 
@@ -38,7 +37,7 @@ import jakarta.validation.constraints.Pattern; // Lab 7
 //@AllArgsConstructor // Lab 10 commented out to implement constructor injection manually
 @Validated
 public class GuitarOrdersController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(GuitarOrdersController.class);
 	/**
 	 * Guitar Orders service to handle business logic related to guitar orders
@@ -46,7 +45,7 @@ public class GuitarOrdersController {
 	 * controller
 	 */
 	private IGuitarOrdersService iGuitarOrdersService;
-	
+
 	/**
 	 * Orders contact information DTO Lab 11 - Inject OrdersContactInfoDto using
 	 * constructor injection
@@ -98,8 +97,8 @@ public class GuitarOrdersController {
 			@RequestHeader("guitarstore-correlation-id") String correlationId,
 			@PathVariable @Pattern(regexp = "^[A-Z0-9]{8,12}$", message = "Serial number must be 8-12 alphanumeric characters") String serialNumber) {
 		logger.debug("GuitarStore-correlation-id found in fetchOrderDetails: {}", correlationId);
-	    CustomerDto customerDto = iGuitarOrdersService.fetchOrder(serialNumber, correlationId);
-	    return ResponseEntity.status(HttpStatus.OK).body(customerDto);
+		CustomerDto customerDto = iGuitarOrdersService.fetchOrder(serialNumber, correlationId);
+		return ResponseEntity.status(HttpStatus.OK).body(customerDto);
 	}
 
 	/**
@@ -109,7 +108,8 @@ public class GuitarOrdersController {
 	 *         orders and HTTP status
 	 */
 	@GetMapping()
-	public ResponseEntity<List<CustomerDto>> fetchAllOrders(@RequestHeader("guitarstore-correlation-id") String correlationId) {
+	public ResponseEntity<List<CustomerDto>> fetchAllOrders(
+			@RequestHeader("guitarstore-correlation-id") String correlationId) {
 		logger.debug("GuitarStore-correlation-id found in fetchAllOrders: {}", correlationId);
 		List<CustomerDto> orders = iGuitarOrdersService.fetchAllOrders();
 		return ResponseEntity.status(HttpStatus.OK).body(orders);

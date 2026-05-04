@@ -11,5 +11,6 @@ import com.tus.guitarorders.dto.InventoryDto;
 @FeignClient("inventory")
 public interface InventoryFeignClient {
 	@GetMapping(value = "/api/inventory", consumes = "application/json")
-	public ResponseEntity<InventoryDto> fetchInventoryDetails(@RequestHeader("guitarstore-correlation-id") String correlationId, @RequestParam String serialNumber);
+	public ResponseEntity<InventoryDto> fetchInventoryDetails(
+			@RequestHeader("guitarstore-correlation-id") String correlationId, @RequestParam String serialNumber);
 }
