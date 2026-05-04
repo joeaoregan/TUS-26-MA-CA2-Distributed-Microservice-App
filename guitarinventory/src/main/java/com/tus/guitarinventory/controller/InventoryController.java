@@ -69,6 +69,7 @@ public class InventoryController {
 	@GetMapping()
 	public ResponseEntity<InventoryDto> fetchGuitarDetails(@RequestParam String serialNumber) {
 		InventoryDto inventoryDto = iInventoryService.fetchGuitar(serialNumber);
+		System.out.println("Build Version: " + buildVersion);
 		return ResponseEntity.status(HttpStatus.OK).body(inventoryDto);
 	}
 }
