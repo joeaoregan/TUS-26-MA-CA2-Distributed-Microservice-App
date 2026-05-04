@@ -25,4 +25,6 @@ public class OrdersDto {
 
     @NotEmpty(message = "Status cannot be null or empty") // Lab 7
     private String status;
+    
+    private InventoryDto inventoryDto;
 }

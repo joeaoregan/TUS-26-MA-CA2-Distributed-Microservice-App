@@ -2,6 +2,8 @@ package com.tus.guitarorders.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +38,8 @@ import jakarta.validation.constraints.Pattern; // Lab 7
 //@AllArgsConstructor // Lab 10 commented out to implement constructor injection manually
 @Validated
 public class GuitarOrdersController {
-
+	
+	private static final Logger logger = LoggerFactory.getLogger(GuitarOrdersController.class);
 	/**
 	 * Guitar Orders service to handle business logic related to guitar orders
 	 * management. Lab 3 - Implemented IGuitarOrdersService and used it in this
@@ -91,8 +95,10 @@ public class GuitarOrdersController {
 	 */
 	@GetMapping("/{serialNumber}")
 	public ResponseEntity<CustomerDto> fetchOrderDetails(
+			@RequestHeader("guitarstore-correlation-id") String correlationId,
 			@PathVariable @Pattern(regexp = "^[A-Z0-9]{8,12}$", message = "Serial number must be 8-12 alphanumeric characters") String serialNumber) {
-	    CustomerDto customerDto = iGuitarOrdersService.fetchOrder(serialNumber);
+		logger.debug("GuitarStore-correlation-id found in fetchOrderDetails: {}", correlationId);
+	    CustomerDto customerDto = iGuitarOrdersService.fetchOrder(serialNumber, correlationId);
 	    return ResponseEntity.status(HttpStatus.OK).body(customerDto);
 	}
 
@@ -103,7 +109,8 @@ public class GuitarOrdersController {
 	 *         orders and HTTP status
 	 */
 	@GetMapping()
-	public ResponseEntity<List<CustomerDto>> fetchAllOrders() {
+	public ResponseEntity<List<CustomerDto>> fetchAllOrders(@RequestHeader("guitarstore-correlation-id") String correlationId) {
+		logger.debug("GuitarStore-correlation-id found in fetchAllOrders: {}", correlationId);
 		List<CustomerDto> orders = iGuitarOrdersService.fetchAllOrders();
 		return ResponseEntity.status(HttpStatus.OK).body(orders);
 	}

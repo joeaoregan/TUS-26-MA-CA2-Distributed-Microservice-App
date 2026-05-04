@@ -48,7 +48,7 @@ public class CustomersServiceImpl implements ICustomersService {
 	 *                                   the customer.
 	 */
 	@Override
-	public CustomerDetailsDto fetchCustomerDetails(String mobileNumber) {
+	public CustomerDetailsDto fetchCustomerDetails(String mobileNumber, String correlationId) {
 		Customer customer = customerRepository.findByMobileNumber(mobileNumber)
 				.orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
 
@@ -60,7 +60,7 @@ public class CustomersServiceImpl implements ICustomersService {
 		customerDetailsDto.setOrdersDto(OrdersMapper.mapToOrdersDto(orders, new OrdersDto()));
 
 		ResponseEntity<InventoryDto> inventoryDtoResponseEntity = inventoryFeignClient
-				.fetchInventoryDetails(orders.getSerialNumber());
+				.fetchInventoryDetails(correlationId, orders.getSerialNumber());
 		customerDetailsDto.setInventoryDto(inventoryDtoResponseEntity.getBody());
 
 		return customerDetailsDto;
