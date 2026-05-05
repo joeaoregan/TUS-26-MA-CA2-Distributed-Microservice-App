@@ -7,16 +7,16 @@ left to right direction
 
 actor User
 
-[API Gateway] as Gateway
-[Discovery Server\n(Eureka)] as Eureka
-[Config Server] as Config
+[API Gateway\nPort: 8072] as Gateway
+[Discovery Server\n(Eureka)\nPort: 8761] as Eureka
+[Config Server\nPort: 8071] as Config
 
-package "GuitarOrders Service" {
+package "GuitarOrders Service\nPort: 8080" {
     [Customer Service] as Customer
     [Orders Service] as Orders
 }
 
-[GuitarInventory Service] as Inventory
+[GuitarInventory Service\nPort: 9090] as Inventory
 
 User --> Gateway : HTTP/REST
 Gateway --> Customer : Requests
