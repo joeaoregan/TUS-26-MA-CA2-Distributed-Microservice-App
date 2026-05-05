@@ -28,6 +28,7 @@ import com.tus.guitarorders.dto.OrdersContactInfoDto;
 import com.tus.guitarorders.dto.ResponseDto;
 import com.tus.guitarorders.service.IGuitarOrdersService;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.Valid; // Lab 7
 import jakarta.validation.constraints.Pattern; // Lab 7
 //import lombok.AllArgsConstructor; // Lab 10 commented out to implement constructor injection manually
@@ -70,9 +71,14 @@ public class GuitarOrdersController {
 		return ResponseEntity.status(HttpStatus.OK).body(ordersContactInfoDto);
 	}
 
+	@RateLimiter(name="getJavaVersion", fallbackMethod="getJavaVersionFallback") // Lab 34 - Apply rate limiting to this endpoint
 	@GetMapping("/java-version")
 	public ResponseEntity<String> getJavaVersion() { // Lab 11
 		return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("JAVA_HOME"));
+	}
+	
+	public ResponseEntity<String> getJavaVersionFallback(Throwable throwable) {
+		return ResponseEntity.status(HttpStatus.OK).body("JAVA 17");
 	}
 
 	@GetMapping("/build-info")
