@@ -72,3 +72,26 @@
 ![sequence](docs/images/sequence.png)
 
     Figure 7. Basic Sequence Diagram
+
+![Startup Sequence](docs/images/startup-sequence.png)
+
+    Figure 8. Guitar Rental Startup Sequence
+
+### Startup Sequence
+
+1. Config Server starts first
+    - Loads and serves central configuration data for all services (including database credentials, feature flags, etc.).
+2. Eureka Server starts (after configuring from Config Server)
+    - Becomes available as the service registry for discovery.
+3. Orders Service (with Customer endpoints) starts
+    - Fetches its configuration from the Config Server.
+    - Registers itself with Eureka for service discovery.
+4. Inventory Service starts
+    - Fetches its configuration from the Config Server.
+    - Registers itself with Eureka.
+5. API Gateway starts last
+    - Fetches its configuration from the Config Server.
+    - Registers itself with Eureka.
+6. Logical domain linking:
+    - Orders and Customer (within Orders Service) are linked by mobileNumber (for customer lookup and rental history).
+    - Orders and Inventory are linked by serialNumber (to fetch guitar details).

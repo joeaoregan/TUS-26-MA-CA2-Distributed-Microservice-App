@@ -1,0 +1,36 @@
+@startuml
+!theme spacelab
+title Guitar Rental Microservices Startup Sequence
+
+autonumber
+
+participant "Config Server" as Config
+participant "Eureka Server" as Eureka
+participant "Orders Service\n(incl. Customer)" as Orders
+participant "Inventory Service" as Inventory
+participant "API Gateway" as Gateway
+
+' Step 1: Config Server starts first
+Config -> Config : Startup\n(Loads central config data)
+
+' Step 2: Eureka Server starts (after Config is available)
+Config -> Eureka : Provides config
+Eureka -> Eureka : Startup\n(Service registry available)
+
+' Step 3: Orders Service (with Customer endpoints) starts
+Config -> Orders : Provides config
+Orders -> Eureka : Registers with Eureka
+
+' Step 4: Inventory Service starts
+Config -> Inventory : Provides config
+Inventory -> Eureka : Registers with Eureka
+
+' Step 5: API Gateway starts last
+Config -> Gateway : Provides config
+Gateway -> Eureka : Registers with Eureka
+
+' Logical links within the domain (order data)
+note over Orders, Orders : Orders & Customer endpoints\nlinked via mobileNumber
+note over Orders, Inventory : Orders & Inventory linked\nvia serialNumber
+
+@enduml
