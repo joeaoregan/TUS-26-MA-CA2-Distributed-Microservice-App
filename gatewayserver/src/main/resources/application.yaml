@@ -9,6 +9,9 @@ spring:
         locator:
           enabled: false # lab 27 Step 6
           lowerCaseServiceId: true # lab 27
+      httpClient:
+        connect-timeout: 1000 # 1 second
+        response-timeout: 2s   # Reduced to 2s to trigger before default CB
 management:  
   health:
     circuitbreakers:

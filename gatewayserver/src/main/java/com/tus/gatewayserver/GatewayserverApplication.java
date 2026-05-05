@@ -33,14 +33,14 @@ public class GatewayserverApplication {
 				.route(p -> p.path("/guitar/orders/**")
 						.filters(f -> f.rewritePath("/guitar/orders/(?<segment>.*)", "/${segment}")
 								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
-								.circuitBreaker(config -> config.setName("ordersCircuitBreaker") // Lab 29
-										.setFallbackUri("forward:/contactSupport"))) // Lab 30
+								/*.circuitBreaker(config -> config.setName("ordersCircuitBreaker") // Lab 29
+										.setFallbackUri("forward:/contactSupport"))*/) // Lab 30
 						.uri("lb://ORDERS"))
 				.route(p -> p.path("/guitar/inventory/**")
 						.filters(f -> f.rewritePath("/guitar/inventory/(?<segment>.*)", "/${segment}")
 								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
-								.circuitBreaker(config -> config.setName("inventoryCircuitBreaker") // Lab 29
-										.setFallbackUri("forward:/contactSupport"))) // Lab 30
+								/*.circuitBreaker(config -> config.setName("inventoryCircuitBreaker") // Lab 29
+										.setFallbackUri("forward:/contactSupport"))*/) // Lab 30
 						.uri("lb://INVENTORY"))
 				.build();
 	}
