@@ -1,59 +1,64 @@
 spring:
-  application:
-    name: gatewayserver
-  config:
-    import: "optional:configserver:http://localhost:8071" # Lab 22
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: false # lab 27 Step 6
-          lowerCaseServiceId: true # lab 27
-      httpClient:
-        connect-timeout: 1000 # 1 second
-        response-timeout: 2s   # Reduced to 2s to trigger before default CB
-management:  
-  health:
-    circuitbreakers:
-      enabled: true # lab 29
-  endpoints:
-    web:
-      exposure:
-        include: "*" # Lab 19
-  endpoint:
-    gateway:
-      enabled: true # Lab 22
-  info:
-    env:
-      enabled: true
+   application:
+      name: gatewayserver
+   config:
+      import: optional:configserver:http://localhost:8071 # Lab 22
+   cloud:
+      gateway:
+#enabled: true # Lab 22
+         server:
+            webflux: # fixes warning in logs
+               discovery:
+                  locator:
+                     enabled: false # lab 27 Step 6
+                     lower-case-service-id: true # lab 27
+               httpClient:
+                  connect-timeout: 1000 # 1 second
+                  response-timeout: 2s # Reduced to 2s to trigger before default CB
+management:
+   health:
+      circuitbreakers:
+         enabled: true # lab 29
+   endpoints:
+      web:
+         exposure:
+            include: '*' # Lab 19
+   endpoint:
+      gateway:
+         access: unrestricted
+      health:
+         show-details: always
+   info:
+      env:
+         enabled: true
 eureka:
-  instance:
-    preferIpAddress: true
-  client:
-    fetchRegistry: true
-    registerWithEureka: true
-    serviceUrl:
-      defaultZone: http://localhost:8070/eureka
+   instance:
+      preferIpAddress: true
+   client:
+      fetchRegistry: true
+      registerWithEureka: true
+      serviceUrl:
+         defaultZone: http://localhost:8070/eureka
 info:
-  app:
-    name: "gatewayserver"
-    description: "Microservices Architecture CA2: Gateway Server"
-    version: "1.0.0"
+   app:
+      name: gatewayserver
+      description: 'Microservices Architecture CA2: Gateway Server'
+      version: 1.0.0
 
 server:
-  port: 8072
-  
+   port: 8072
+
 logging:
-  level:
-    com:
-      tus:
-        gatewayserver: DEBUG
-        
+   level:
+      com:
+         tus:
+            gatewayserver: DEBUG
+
 # Lab 29 Circuit Breaker
 resilience4j.circuitbreaker:
-  configs:
-    default: # only 1 configured
-      slidingWindowSize: 10 # The number of calls monitored
-      permittedNumberOfCallsInHalfOpenState: 2 # number going through in half-open state
-      failureRateThreshold: 50 # failure threshold
-      waitDurationInOpenState: 10000 # how long it waits in open state before it tries again (10 seconds)
+   configs:
+      default: # only 1 configured
+         slidingWindowSize: 10 # The number of calls monitored
+         permittedNumberOfCallsInHalfOpenState: 2 # number going through in half-open state
+         failureRateThreshold: 50 # failure threshold
+         waitDurationInOpenState: 10000 # how long it waits in open state before it tries again (10 seconds)

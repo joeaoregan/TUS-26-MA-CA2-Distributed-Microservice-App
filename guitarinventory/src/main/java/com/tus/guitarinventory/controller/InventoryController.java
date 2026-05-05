@@ -44,6 +44,7 @@ public class InventoryController {
 
 	@GetMapping("/contact-info")
 	public ResponseEntity<InventoryContactInfoDto> getContactInfo() {
+		logger.debug("Invoked inventory contact-info API");
 		return ResponseEntity.status(HttpStatus.OK).body(inventoryContactInfoDto);
 	}
 
