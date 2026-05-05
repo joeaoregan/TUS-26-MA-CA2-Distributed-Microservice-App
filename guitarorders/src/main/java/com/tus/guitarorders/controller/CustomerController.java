@@ -21,19 +21,30 @@ import jakarta.validation.constraints.Pattern;
 @Validated
 public class CustomerController {
 
-	private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
-	private final ICustomersService iCustomerService;
+    private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
+    private final ICustomersService iCustomerService;
 
-	public CustomerController(ICustomersService iCustomerService) {
-		this.iCustomerService = iCustomerService;
-	}
+    public CustomerController(ICustomersService iCustomerService) {
+        this.iCustomerService = iCustomerService;
+    }
 
-	@GetMapping("/customers")
-	public ResponseEntity<CustomerDetailsDto> fetchCustomerDetails(
-			@RequestHeader("guitarstore-correlation-id") String correlationId,
-			@RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile Number must be 10 digits") String mobileNumber) {
-		logger.debug("GuitarStore-correlation-id found: {}", correlationId);
-		CustomerDetailsDto customerDetailsDto = iCustomerService.fetchCustomerDetails(mobileNumber, correlationId);
-		return ResponseEntity.ok(customerDetailsDto);
-	}
+    /**
+     * Endpoint to fetch customer details based on mobile number. This method
+     * validates the mobile number format and uses the correlation ID for
+     * tracing. Lab 7 - Added	validation for mobile number format and used
+     * correlation ID for logging. Lab 11 - Used Environment to access
+     * configuration properties if needed.
+     *
+     * @param correlationId The correlation ID for tracing requests
+     * @param mobileNumber The mobile number of the customer
+     * @return ResponseEntity containing CustomerDetailsDto
+     */
+    @GetMapping("/customers")
+    public ResponseEntity<CustomerDetailsDto> fetchCustomerDetails(
+            @RequestHeader("guitarstore-correlation-id") String correlationId,
+            @RequestParam @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile Number must be 10 digits") String mobileNumber) {
+        logger.debug("GuitarStore-correlation-id found: {}", correlationId);
+        CustomerDetailsDto customerDetailsDto = iCustomerService.fetchCustomerDetails(mobileNumber, correlationId);
+        return ResponseEntity.ok(customerDetailsDto);
+    }
 }

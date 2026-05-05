@@ -131,7 +131,7 @@ public class GuitarOrdersController {
 	 *         operation
 	 */
 	@PostMapping()
-	public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) { // Lab 7
+	public ResponseEntity<ResponseDto> createOrder(@Valid @RequestBody CustomerDto customerDto) { // Lab 7
 		iGuitarOrdersService.createOrder(customerDto);
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(new ResponseDto(GuitarOrdersConstants.STATUS_201, GuitarOrdersConstants.MESSAGE_201));
