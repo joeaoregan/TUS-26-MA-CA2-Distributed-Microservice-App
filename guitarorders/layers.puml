@@ -1,0 +1,20 @@
+@startuml
+!theme spacelab
+title Standard Spring Boot 3-Layered Architecture
+
+package "Web Layer" {
+  [Controller]
+}
+
+package "Service Layer" {
+  [Service]
+}
+
+package "Data Access Layer" {
+  [Repository]
+}
+
+[Controller] -right-> [Service] : Calls
+[Service] -right-> [Repository] : Calls
+
+@enduml
