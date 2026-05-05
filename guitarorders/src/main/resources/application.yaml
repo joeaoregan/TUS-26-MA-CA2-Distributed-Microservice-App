@@ -2,6 +2,9 @@ server:
   port: 8080
 spring:
   cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true # lab 31 Circuit Breaker with Feign Client
     compatibility-verifier:
       enabled: false # lab 16: disable version check
   application:
@@ -27,8 +30,8 @@ management:
   endpoints:
     web:
       exposure:
-        # include: "*" # Lab 19
-        include: info, shutdown # lab 22
+        include: "*" # Lab 19, 31
+        # include: info, shutdown # lab 22
   endpoint:
     shutdown:
       enabled: true
@@ -56,3 +59,12 @@ logging:
     com:
       tus:
         guitarorders: DEBUG
+        
+# Lab 31 Cicuit Breaker with Feign Client
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 2
+      failureRateThreshold: 50
+      waitDurationInOpenState: 10000 # 10 seconds

@@ -61,7 +61,10 @@ public class CustomersServiceImpl implements ICustomersService {
 
 		ResponseEntity<InventoryDto> inventoryDtoResponseEntity = inventoryFeignClient
 				.fetchInventoryDetails(correlationId, orders.getSerialNumber());
-		customerDetailsDto.setInventoryDto(inventoryDtoResponseEntity.getBody());
+
+		if (inventoryDtoResponseEntity != null && inventoryDtoResponseEntity.getBody() != null) {
+			customerDetailsDto.setInventoryDto(inventoryDtoResponseEntity.getBody());
+		}
 
 		return customerDetailsDto;
 	}

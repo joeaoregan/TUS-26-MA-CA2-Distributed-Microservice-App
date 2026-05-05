@@ -131,16 +131,17 @@ public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
 		}
 		CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
 		customerDto.setOrdersDto(OrdersMapper.mapToOrdersDto(orders, new OrdersDto()));
-		
-	    ResponseEntity<InventoryDto> inventoryResponse = inventoryFeignClient.fetchInventoryDetails(correlationId, serialNumber);
-	    
-	    if(inventoryResponse != null && inventoryResponse.getBody() != null) {
-	        customerDto.getOrdersDto().setInventoryDto(inventoryResponse.getBody());
-	        
-	    }
+
+		ResponseEntity<InventoryDto> inventoryResponse = inventoryFeignClient.fetchInventoryDetails(correlationId,
+				serialNumber);
+
+		if (inventoryResponse != null && inventoryResponse.getBody() != null) {
+			customerDto.getOrdersDto().setInventoryDto(inventoryResponse.getBody());
+
+		}
 
 		return customerDto;
-	}	
+	}
 
 	/**
 	 * Fetch all orders along with their associated customer details. Lab 6 -
@@ -228,7 +229,8 @@ public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
 	 * @param mobileNumber The mobile number of the customer to fetch details for
 	 * @return CustomerDetailsDto containing customer, order, and inventory details
 	 */
-	public CustomerDetailsDto fetchCustomerDetails(@RequestHeader("guitarstore-correlation-id") String correlationId, @RequestParam String mobileNumber) {
+	public CustomerDetailsDto fetchCustomerDetails(@RequestHeader("guitarstore-correlation-id") String correlationId,
+			@RequestParam String mobileNumber) {
 		Customer customer = customerRepository.findByMobileNumber(mobileNumber)
 				.orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
 
@@ -237,7 +239,8 @@ public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
 
 //        String serialNumber = customer.getOrders().get(0).getSerialNumber(); 
 //        ResponseEntity<InventoryDto> inventoryDto = inventoryFeignClient.fetchInventoryDetails(serialNumber);
-		ResponseEntity<InventoryDto> inventoryDto = inventoryFeignClient.fetchInventoryDetails(correlationId, "FEN12345678");
+		ResponseEntity<InventoryDto> inventoryDto = inventoryFeignClient.fetchInventoryDetails(correlationId,
+				"FEN12345678");
 		if (inventoryDto != null && inventoryDto.getStatusCode().is2xxSuccessful()) {
 			customerDetailsDto.setInventoryDto(inventoryDto.getBody());
 		}
@@ -252,12 +255,14 @@ public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
 	 * @param serialNumber The serial number of the order to fetch details for
 	 * @return OrderDetailsDto containing order and inventory details
 	 */
-	public OrderDetailsDto fetchOrderDetails(@RequestHeader("guitarstore-correlation-id") String correlationId, @RequestParam String serialNumber) {
+	public OrderDetailsDto fetchOrderDetails(@RequestHeader("guitarstore-correlation-id") String correlationId,
+			@RequestParam String serialNumber) {
 		Orders orders = ordersRepository.findBySerialNumber(serialNumber)
 				.orElseThrow(() -> new ResourceNotFoundException("Order", "serialNumber", serialNumber));
 		OrderDetailsDto orderDetailsDto = OrdersMapper.mapToOrderDetailsDto(orders, new OrderDetailsDto());
 
-		ResponseEntity<InventoryDto> inventoryDto = inventoryFeignClient.fetchInventoryDetails(correlationId, serialNumber);
+		ResponseEntity<InventoryDto> inventoryDto = inventoryFeignClient.fetchInventoryDetails(correlationId,
+				serialNumber);
 		if (inventoryDto != null && inventoryDto.getStatusCode().is2xxSuccessful()) {
 			orderDetailsDto.setInventoryDto(inventoryDto.getBody());
 		}
