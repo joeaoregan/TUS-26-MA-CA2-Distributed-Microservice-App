@@ -1,0 +1,27 @@
+@startuml
+!theme spacelab
+
+title "Microservices Infrastructure Overview"
+
+component "Config Server" as Config
+component "Discovery Server\n(Eureka)" as Eureka
+component "API Gateway" as Gateway
+
+package "GuitarOrders Service" {
+  component "Customer Service" as Customer
+  component "Orders Service" as Orders
+}
+
+component "GuitarInventory Service" as Inventory
+
+Gateway --> Eureka : Service Discovery
+Gateway --> Config : Loads config
+
+Customer --> Eureka
+Customer --> Config
+Orders --> Eureka
+Orders --> Config
+Inventory --> Eureka
+Inventory --> Config
+
+@enduml

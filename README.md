@@ -37,3 +37,38 @@
 - **OAuth2 Resource Server**: JWT-based security.
 - **Micrometer Tracing + Zipkin/Brave**: Trace single request across service boundaries.
 
+---
+
+### Architecture Diagram
+
+![Architecture Diagram](docs/images/architecture-diagram.png)
+
+    Figure 1. High-Level Architecture Diagram
+
+![Distributed System Architecture](docs/images/distributed-system-architecture.png)
+
+    Figure 2. Distributed System Architecture
+
+![Infrastructure Overview](docs/images/infrastructure-overview.png)
+
+    Figure 3. Infrastructure Overview
+
+#### Service Interaction
+
+![Service Interaction Diagram](docs/images/service-interaction.png)
+
+    Figure 4. Service Interaction Diagram
+
+![Communication](docs/images/communication.png)
+
+    Figure 5. Entity Communication
+
+#### Sequence Diagrams
+
+![sequence](docs/images/sequence-get-orders.png)
+
+    Figure 6. Get Orders Sequence Diagram Orders return CustomerDTO and InventoryDTO
+
+![sequence](docs/images/sequence.png)
+
+    Figure 7. Basic Sequence Diagram

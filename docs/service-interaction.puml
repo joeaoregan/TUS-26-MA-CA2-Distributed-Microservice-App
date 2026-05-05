@@ -1,0 +1,51 @@
+@startuml
+!theme spacelab
+
+title Guitar Store Service Interaction
+
+actor User
+
+rectangle "API Gateway" as Gateway
+rectangle "Discovery Server\n(Eureka)" as Eureka
+rectangle "Config Server" as Config
+
+rectangle "Customer Service" as Customer
+rectangle "Orders Service" as Orders
+rectangle "Inventory Service" as Inventory
+
+User --> Gateway : "Create Order"
+Gateway --> Orders : "POST /orders"
+Orders --> Customer : "GET /customers/{id}"
+Orders --> Inventory : "GET /guitars/{serial}\nCheck & Reserve"
+
+note right of Orders
+  - Manages guitar orders
+  - Create, update, delete, and fetch orders
+  - Orchestrates:
+      * Gets customer by mobile number
+      * Checks guitar serial number
+      * Tracks status (pending, shipped, delivered)
+end note
+
+note left of Inventory
+- Manages guitar stock
+- Finds guitars by serial number
+end note
+
+note right of Customer
+- Manages customer records
+- Find customer by mobile number
+end note
+
+' All services fetch config & register with discovery server
+Customer ..> Eureka : Register
+Orders ..> Eureka : Register
+Inventory ..> Eureka : Register
+Gateway ..> Eureka : Discover
+
+Customer ..> Config : Reads config
+Orders ..> Config : Reads config
+Inventory ..> Config : Reads config
+Gateway ..> Config : Reads config
+
+@enduml

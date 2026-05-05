@@ -1,0 +1,39 @@
+@startuml
+!theme spacelab
+
+title "Guitar Store Distributed Application"
+
+package "TUS Microservices Architecture CA2" {
+    [User]
+    [API Gateway] as Gateway
+    [Discovery Server\n(Eureka)] as Eureka
+    [Config Server] as Config
+
+    package "Gutiar Store Microservices" {
+        [Customer Service]
+        [Orders Service]
+        [Inventory Service]
+        [Potential\nOther Services...]
+    }
+    
+    
+	note right of Gateway : Single entry point\nRoutes client requests\nto appropriate microservice.	
+	note right of Eureka : Tracks microservice addresses\nOther services can find\nand connect dynamically.
+	note right of Config : Central configurtion manager\nProvides external configuration\nfor all microservices.
+
+    User --> Gateway : HTTP/REST
+    Gateway --> "Customer Service" : Forwards Requests
+    Gateway --> "Orders Service"
+    Gateway --> "Inventory Service"
+
+    "Customer Service" --> Eureka : Register/Discover
+    "Orders Service" --> Eureka : Register/Discover
+    "Inventory Service" --> Eureka : Register/Discover
+    Gateway --> Eureka : Discover Services
+
+    "Customer Service" --> Config : Config fetch
+    "Orders Service" --> Config : Config fetch
+    "Inventory Service" --> Config : Config fetch
+    Gateway --> Config : Config fetch
+}
+@enduml

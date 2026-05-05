@@ -1,0 +1,35 @@
+@startuml
+!theme spacelab
+
+title Guitar Store Distributed Application
+
+left to right direction
+
+actor User
+
+[API Gateway] as Gateway
+[Discovery Server\n(Eureka)] as Eureka
+[Config Server] as Config
+
+package "GuitarOrders Service" {
+    [Customer Service] as Customer
+    [Orders Service] as Orders
+}
+
+[GuitarInventory Service] as Inventory
+
+User --> Gateway : HTTP/REST
+Gateway --> Customer : Requests
+Gateway --> Orders : Requests
+Gateway --> Inventory : Requests
+
+Customer -down-> Eureka : Register
+Orders -down-> Eureka : Register
+Inventory -down-> Eureka : Register
+Gateway -right-> Eureka : Discover
+
+Customer -left-> Config : Config fetch
+Orders -left-> Config : Config fetch
+Inventory -left-> Config : Config fetch
+Gateway -left-> Config : Config fetch
+@enduml

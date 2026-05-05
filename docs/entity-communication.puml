@@ -1,0 +1,25 @@
+@startuml
+'!theme spacelab
+
+component "Customer Service" as Customer
+component "Orders Service" as Orders
+component "Inventory Service" as Inventory
+
+Customer --> Orders : mobile number
+Orders <--> Inventory : serial number
+
+note right of Orders
+- Handles order lifecycle
+- Receives mobile number from Customer
+- Uses serial number to check Inventory
+end note
+
+note left of Customer
+- Manages customer data
+end note
+
+note left of Inventory
+- Manages guitar stock
+end note
+
+@enduml

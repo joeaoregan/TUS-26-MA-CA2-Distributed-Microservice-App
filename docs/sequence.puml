@@ -1,0 +1,21 @@
+@startuml
+title Get Order Details (with joined Customer and Inventory Info)
+
+actor Client
+participant "Orders Service" as Orders
+participant "Customer Service" as Customer
+participant "Inventory Service" as Inventory
+
+Client -> Orders : GET /orders/{serialNumber}\n(e.g., request order details)
+Orders -> Customer : GET /customers?mobileNumber={mobileNumber}
+activate Customer
+Customer --> Orders : CustomerDetailsDto
+deactivate Customer
+
+Orders -> Inventory : GET /inventory?serialNumber={serialNumber}
+activate Inventory
+Inventory --> Orders : InventoryDto
+deactivate Inventory
+
+Orders --> Client : OrderDetailsDto\n(includes customer & inventory info)
+@enduml

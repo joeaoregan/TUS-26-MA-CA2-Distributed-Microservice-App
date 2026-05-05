@@ -1,0 +1,27 @@
+@startuml
+title GET /guitar/orders/api/orders/FEN12345678 - Order Details Retrieval
+
+actor Client
+participant "API Gateway" as Gateway
+participant "Orders Service" as Orders
+participant "Customer Service" as Customer
+participant "Inventory Service" as Inventory
+
+Client -> Gateway : GET /guitar/orders/api/orders/FEN12345678
+Gateway -> Orders : GET /api/orders/FEN12345678
+
+alt Valid serial number
+    Orders -> Customer : GET /api/customers?mobileNumber={from order}
+    Customer --> Orders : CustomerDetailsDto
+
+    Orders -> Inventory : GET /api/inventory?serialNumber=FEN12345678
+    Inventory --> Orders : InventoryDto
+
+    Orders --> Gateway : OrderDetailsDto (includes\ncustomer & inventory info)
+    Gateway --> Client : OrderDetailsDto (full response)
+else Invalid serial or not found
+    Orders --> Gateway : 404 Not Found / Error
+    Gateway --> Client : 404 Not Found / Error
+end
+
+@enduml
