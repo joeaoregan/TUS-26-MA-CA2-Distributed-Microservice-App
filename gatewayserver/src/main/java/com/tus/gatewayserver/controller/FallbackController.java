@@ -18,8 +18,7 @@ public class FallbackController {
 	@RequestMapping("/contactSupport")
 	public Mono<String> contactSupport() {
 //		return Mono.just("An error occurred. Please try later or contact support!");
-		String message = "<h1>HEY! LOOK AT ME I'M A FALLBACK MESSAGE!!!</h1>"
-				+ "<p>An error occurred. Please try later or contact support!</p>";
+		String message = "<h1>HEY! LOOK AT ME I'M A RE-TRY MESSAGE!!!</h1>";
 		return Mono.just(message);
 	}
 }
