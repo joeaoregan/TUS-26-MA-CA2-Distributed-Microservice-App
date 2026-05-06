@@ -1,6 +1,6 @@
 package com.tus.gatewayserver;
 
-import java.time.Duration;
+//import java.time.Duration;
 import java.time.LocalDateTime;
 
 import org.springframework.boot.SpringApplication;
@@ -42,7 +42,7 @@ public class GatewayserverApplication {
 								.requestRateLimiter(config -> config.setRateLimiter(redisRateLimiter())
 						                .setKeyResolver(userKeyResolver())) // Lab 34
 								.circuitBreaker(config -> config.setName("ordersCircuitBreaker") // Lab 29
-//										.setFallbackUri("forward:/contactSupport")
+										.setFallbackUri("forward:/contactSupport")
 										)) // Lab 30
 						.uri("lb://ORDERS"))
 				.route(p -> p.path("/guitar/inventory/**")
@@ -52,7 +52,7 @@ public class GatewayserverApplication {
 								.requestRateLimiter(config -> config.setRateLimiter(redisRateLimiter())
 						                .setKeyResolver(userKeyResolver())) // Lab 34
 								.circuitBreaker(config -> config.setName("inventoryCircuitBreaker") // Lab 29
-//										.setFallbackUri("forward:/contactSupport")
+										.setFallbackUri("forward:/contactSupport") // Screencast - Resiliency - Fallback
 										)) // Lab 30
 						.uri("lb://INVENTORY"))
 				.build();
