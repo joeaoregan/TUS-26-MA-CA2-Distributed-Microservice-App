@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tus.guitarorders.constants.GuitarOrdersConstants;
-import com.tus.guitarorders.controller.GuitarOrdersController;
 import com.tus.guitarorders.dto.CustomerDetailsDto;
 import com.tus.guitarorders.dto.CustomerDto;
 import com.tus.guitarorders.dto.InventoryDto;
@@ -38,7 +37,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
 
-	private static final Logger logger = LoggerFactory.getLogger(GuitarOrdersServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(GuitarOrdersServiceImpl.class);
 
     /**
      * InventoryFeignClient is injected to enable communication with the
@@ -116,7 +115,7 @@ public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
         long randomOrderNumber = 1000000000L + new Random().nextInt(900000000);
         newOrder.setOrderNumber(randomOrderNumber);
 
-		logger.debug("Create new Order with Order Number: {}", randomOrderNumber);
+        logger.debug("Create new Order with Order Number: {}", randomOrderNumber);
 
         newOrder.setSerialNumber(ordersDto.getSerialNumber());
         newOrder.setQuantity(ordersDto.getQuantity());
@@ -167,19 +166,29 @@ public class GuitarOrdersServiceImpl implements IGuitarOrdersService {
      * @return List of CustomerDto containing customer and order details
      */
     @Override
-    public List<CustomerDto> fetchAllOrders() {
-        // 1. Fetch all orders from the repository
+    public List<CustomerDto> fetchAllOrders(String correlationId) { // Screencast Circuit Breaker
         List<Orders> ordersList = ordersRepository.findAll();
         List<CustomerDto> customerDtoList = new ArrayList<>();
 
-        // 2. Iterate through orders to build the DTOs
         for (Orders orders : ordersList) {
-            // Access the linked Customer object via the JPA relationship
             Customer customer = orders.getCustomer();
-
             if (customer != null) {
                 CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
-                customerDto.setOrdersDto(OrdersMapper.mapToOrdersDto(orders, new OrdersDto()));
+                OrdersDto ordersDto = OrdersMapper.mapToOrdersDto(orders, new OrdersDto());
+
+                // Fetch inventory - fix correlation id issue for screencast
+                try {
+                    ResponseEntity<InventoryDto> inventoryResponse = inventoryFeignClient.fetchInventoryDetails(
+                            correlationId, orders.getSerialNumber());
+                    if (inventoryResponse != null && inventoryResponse.getBody() != null) {
+                        ordersDto.setInventoryDto(inventoryResponse.getBody());
+                    }
+                } catch (Exception ex) {
+                    logger.warn("Could not fetch inventory for serial: {}", orders.getSerialNumber(), ex);
+                    // Optionally set a fallback or leave as null
+                }
+
+                customerDto.setOrdersDto(ordersDto);
                 customerDtoList.add(customerDto);
             }
         }

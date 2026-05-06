@@ -56,3 +56,13 @@ logging:
     com:
       tus:
         guitarinventory: DEBUG
+        
+        
+# Screencast: Resiliency - Circuit Breaker
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 8
+      permittedNumberOfCallsInHalfOpenState: 2
+      failureRateThreshold: 50
+      waitDurationInOpenState: 5000 # 5 seconds    

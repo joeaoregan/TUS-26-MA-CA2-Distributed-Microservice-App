@@ -71,12 +71,13 @@ public class GuitarOrdersController {
 		return ResponseEntity.status(HttpStatus.OK).body(ordersContactInfoDto);
 	}
 
-	@RateLimiter(name="getJavaVersion", fallbackMethod="getJavaVersionFallback") // Lab 34 - Apply rate limiting to this endpoint
+	@RateLimiter(name = "getJavaVersion", fallbackMethod = "getJavaVersionFallback") // Lab 34 - Apply rate limiting to
+																						// this endpoint
 	@GetMapping("/java-version")
 	public ResponseEntity<String> getJavaVersion() { // Lab 11
 		return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("JAVA_HOME"));
 	}
-	
+
 	public ResponseEntity<String> getJavaVersionFallback(Throwable throwable) {
 		return ResponseEntity.status(HttpStatus.OK).body("JAVA 17");
 	}
@@ -117,7 +118,7 @@ public class GuitarOrdersController {
 	public ResponseEntity<List<CustomerDto>> fetchAllOrders(
 			@RequestHeader("guitarstore-correlation-id") String correlationId) {
 		logger.debug("GuitarStore-correlation-id found in fetchAllOrders: {}", correlationId);
-		List<CustomerDto> orders = iGuitarOrdersService.fetchAllOrders();
+		List<CustomerDto> orders = iGuitarOrdersService.fetchAllOrders(correlationId);
 		return ResponseEntity.status(HttpStatus.OK).body(orders);
 	}
 
