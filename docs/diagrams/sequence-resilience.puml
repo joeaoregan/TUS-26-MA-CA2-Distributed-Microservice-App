@@ -1,0 +1,52 @@
+@startuml
+!theme spacelab
+skinparam MaxMessageSize 150
+
+title API Gateway Resilience & Traffic Management: Comprehensive Resilience Lifecycle
+
+actor Client
+participant "API Gateway\n" as Gateway
+participant "Discovery Server\n(Eureka)" as Eureka
+participant "Orders Service\n(Instance 1)" as Orders1
+participant "Orders Service\n(Instance 2)" as Orders2
+participant "Fallback Controller\n" as Fallback
+
+== Scenario 1: Healthy Traffic & Load Balancing ==
+
+Client -> Gateway : GET /guitar/orders/api/orders
+Gateway -> Eureka : Lookup "ORDERS" service
+Eureka --> Gateway : Return [IP_1:8080, IP_2:8081]
+Gateway -> Orders1 : Forward Request (Round-Robin)
+Orders1 --> Gateway : 200 OK
+Gateway --> Client : Successful Response
+
+== Scenario 2: Transient Blip & Retry Pattern ==
+
+Client -> Gateway : GET /guitar/inventory/api/inventory
+Gateway -> Orders1 : Attempt 1 (Connection Refused/Timeout)
+note right of Gateway : **Retry Pattern Active**: Attempting recovery
+Gateway -> Orders2 : Attempt 2 (Exponential Backoff)
+Orders2 --> Gateway : 200 OK
+Gateway --> Client : Successful Response (Self-Healed)
+
+== Scenario 3: Persistent Failure & Circuit Breaker ==
+
+group Circuit Breaker: CLOSED -> OPEN
+    Client -> Gateway : POST /guitar/orders/api/orders
+    Gateway -> Orders1 : Request fails (Service Hanging)
+    note right of Gateway : **HTTP Timeout Triggered**
+    ... Repeated Failures ...
+    note right of Gateway : failureRate > 50% threshold met
+    Gateway -> Gateway : Trip Breaker to **OPEN**
+end
+
+Client -> Gateway : New Request (While Breaker is OPEN)
+Gateway -> Gateway : Reject request immediately (Fail-Fast)
+
+group Graceful Degradation & Fallback
+    Gateway -> Fallback : Forward to /contactSupport
+    Fallback --> Gateway : "Information Temporarily Unavailable"
+    Gateway --> Client : User-friendly fallback message:\n"An error occurred. Please try later or contact support!"
+end
+
+@enduml

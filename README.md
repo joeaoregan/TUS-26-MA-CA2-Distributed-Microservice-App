@@ -19,19 +19,19 @@
 
 --- 
 
-### Dependencies
+## Dependencies
 
-#### Service Discovery & Routing
+### Service Discovery & Routing
 
 - **Eureka Discovery Client**: To allow the service to register with the discovery server dynamically.
 - **Spring Cloud Config (Client)**: To fetch configuration from your central Config Server at startup.
 
-#### Interaction & Resilience
+### Interaction & Resilience
 
 - **OpenFeign**: (Optional) Makes service-to-service calls between Service A (Guitar-Store-Order) and Service B (Guitar-Store-Inventory) look like simple method calls.
 - **Resilience4j**: For implementing Circuit Breakers and Fallbacks.
 
-#### Security & Observability
+### Security & Observability
 
 - **Spring Boot Starter Security**: For authenticaion.
 - **OAuth2 Resource Server**: JWT-based security.
@@ -39,23 +39,25 @@
 
 ---
 
+## Diagrams
+
 ### Architecture Diagram
 
-![Architecture Diagram](docs/images/architecture-diagram.png)
+![Architecture Diagram](docs/images/architecture-diagram-v2.png)
 
     Figure 1. High-Level Architecture Diagram
 
-![Distributed System Architecture](docs/images/distributed-system-architecture.png)
+![Distributed System Architecture](docs/images/distributed-system-architecture-v2.png)
 
     Figure 2. Distributed System Architecture
 
-![Infrastructure Overview](docs/images/infrastructure-overview.png)
+![Infrastructure Overview](docs/images/infrastructure-overview-v2.png)
 
     Figure 3. Infrastructure Overview
 
-#### Service Interaction
+### Service Interaction
 
-![Service Interaction Diagram](docs/images/service-interaction.png)
+![Service Interaction Diagram](docs/images/service-interaction-v2.png)
 
     Figure 4. Service Interaction Diagram
 
@@ -63,7 +65,7 @@
 
     Figure 5. Entity Communication
 
-#### Sequence Diagrams
+### Sequence Diagrams
 
 ![sequence](docs/images/sequence-get-orders.png)
 
@@ -73,12 +75,13 @@
 
     Figure 7. Basic Sequence Diagram
 
+#### Startup Sequence
+
 ![Startup Sequence](docs/images/startup-sequence.png)
 
     Figure 8. Guitar Rental Startup Sequence
 
-### Startup Sequence
-
+##### Steps:
 1. Config Server starts first
     - Loads and serves central configuration data for all services (including database credentials, feature flags, etc.).
 2. Eureka Server starts (after configuring from Config Server)
@@ -95,3 +98,9 @@
 6. Logical domain linking:
     - Orders and Customer (within Orders Service) are linked by mobileNumber (for customer lookup and rental history).
     - Orders and Inventory are linked by serialNumber (to fetch guitar details).
+
+#### Resilience Sequence
+
+![Resilience Scenario Sequences](docs/images/resilience-sequence.png)
+
+    Figure 9> Resilience Scenario Sequences

@@ -1,0 +1,39 @@
+
+@startuml
+!theme spacelab
+title POST /guitar/orders/api/orders - Secure Order Creation
+
+actor "End User" as User
+participant "API Gateway" as Gateway
+participant "Keycloak IDP" as Keycloak
+participant "Orders Service" as Orders
+
+User -> Gateway : 1. POST /guitar/orders/api/orders (No Token)
+Gateway --> User : 2. 401 Unauthorised / Redirect to Login
+
+== Authentication ==
+
+User -> Keycloak : 3. Enter Credentials
+Keycloak --> User : 4. Issue Authorisation Code
+User -> Keycloak : 5. Exchange Code for JWT
+Keycloak --> User : 6. Return Signed JWT (with Roles)
+
+== Authorized Request ==
+
+User -> Gateway : 7. POST /api/orders + Bearer JWT
+activate Gateway
+Gateway -> Gateway : 8. Validate JWT Signature & Roles
+
+alt User has 'ORDERS' Role
+    Gateway -> Orders : 9. Forward Request
+    activate Orders
+    Orders -> Orders : 10. Persist Customer & Order
+    Orders --> Gateway : 11. 201 Created
+    deactivate Orders
+    Gateway --> User : 12. Success Response
+else User lacks 'ORDERS' Role
+    Gateway --> User : 13. 403 Forbidden
+end
+deactivate Gateway
+
+@enduml

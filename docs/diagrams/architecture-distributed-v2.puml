@@ -1,0 +1,46 @@
+@startuml
+!theme spacelab
+
+title Guitar Store Distributed Application
+
+left to right direction
+
+[Keycloak\nPort: 7080] as Keycloak  #line.dashed
+actor User
+
+[API Gateway\nPort: 8072] as Gateway
+[Discovery Server\n(Eureka)\nPort: 8761] as Eureka
+[Config Server\nPort: 8071] as Config
+
+package "GuitarOrders Service\nPort: 8080" {
+    [Customer Service] as Customer
+    [Orders Service] as Orders
+}
+
+[GuitarInventory Service\nPort: 9090] as Inventory
+
+' User authenticates with Keycloak to get a token
+User --> Keycloak : Login /\nGet Token
+
+' User sends HTTP/REST requests through gateway (with JWT)
+User --> Gateway : HTTP/REST\n(with JWT)
+
+' Gateway routes to internal services
+Gateway --> Customer : Requests
+Gateway --> Orders : Requests
+Gateway --> Inventory : Requests
+
+' Service registration and discovery
+Customer -down-> Eureka : Register
+Orders -down-> Eureka : Register
+Inventory -down-> Eureka : Register
+Gateway -right-> Eureka : Discover
+
+' All fetch config at startup
+Customer -left-> Config : Config fetch
+Orders -left-> Config : Config fetch
+Inventory -left-> Config : Config fetch
+Gateway -left-> Config : Config fetch
+
+' Gateway performs validation with Keycloak metadata (implicit in JWT config—optional, can be left out for clarity)
+@enduml

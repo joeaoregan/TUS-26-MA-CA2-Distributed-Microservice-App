@@ -3,6 +3,7 @@
 
 title Guitar Store Service Interaction
 
+rectangle "Keycloak" as Keycloak  #line.dashed
 actor User
 
 rectangle "API Gateway" as Gateway
@@ -13,7 +14,11 @@ rectangle "Customer Service" as Customer
 rectangle "Orders Service" as Orders
 rectangle "Inventory Service" as Inventory
 
-User --> Gateway : "Create Order"
+' User authenticates with Keycloak to get JWT
+User -left-> Keycloak : "Login / Get Token"
+' User interacts with API Gateway (includes JWT)
+User --> Gateway : "Create Order\n(with JWT)"
+
 Gateway --> Orders : "POST /orders"
 Orders --> Customer : "GET /customers/{id}"
 Orders --> Inventory : "GET /guitars/{serial}\nCheck & Reserve"

@@ -1,0 +1,32 @@
+@startuml
+!theme spacelab
+
+title "Microservices Infrastructure Overview"
+
+' 1. Declare Keycloak FIRST, before the gateway.
+component "Keycloak\n" as Keycloak  #line.dashed
+component "API Gateway\n" as Gateway
+component "Config Server\n" as Config
+component "Discovery Server\n(Eureka)" as Eureka
+
+package "GuitarOrders Service" {
+  component "Customer\nService" as Customer
+  component "Orders\nService" as Orders
+}
+
+component "GuitarInventory\nService" as Inventory
+
+' 2. Keycloak should point to Gateway (rightward), not the reverse.
+Keycloak ..> Gateway : Auth (OAuth2/JWT)
+
+Gateway -right-> Eureka : Service Discovery
+Gateway -right-> Config : Loads config
+
+Customer --> Eureka
+Customer --> Config
+Orders --> Eureka
+Orders --> Config
+Inventory --> Eureka
+Inventory --> Config
+
+@enduml
