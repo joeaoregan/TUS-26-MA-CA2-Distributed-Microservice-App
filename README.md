@@ -17,6 +17,14 @@
 **Module**: Microservices Architecture  
 **CA2**: Cloud-native distributed application composed of interacting microservices
 
+---
+
+## TUS-26-MA-CA2-Config
+
+Configuration Repository:  
+
+<https://github.com/joeaoregan/TUS-26-MA-CA2-Config>
+
 --- 
 
 ## Dependencies
