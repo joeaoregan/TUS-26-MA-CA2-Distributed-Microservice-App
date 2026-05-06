@@ -1,0 +1,49 @@
+@startuml
+title GET /guitar/orders/api/orders/FEN12345678 - Order Details Retrieval
+
+skinparam backgroundColor #0d1117
+skinparam defaultFontColor #e6edf3
+skinparam sequence {
+    ArrowColor #79c0ff
+    LifeLineBorderColor #58a6ff
+    LifeLineBackgroundColor #161b22
+    ParticipantBorderColor #58a6ff
+    ParticipantBackgroundColor #161b22
+    ParticipantFontColor #e6edf3
+    ActorBorderColor #58a6ff
+    ActorBackgroundColor #161b22
+    ActorFontColor #e6edf3
+    GroupBorderColor #58a6ff
+    GroupBackgroundColor #0d1117
+    GroupFontColor #e6edf3
+}
+skinparam note {
+    BackgroundColor #161b22
+    BorderColor #58a6ff
+    FontColor #e6edf3
+}
+
+actor Client
+participant "API Gateway" as Gateway
+participant "Orders Service" as Orders
+participant "Customer Service" as Customer
+participant "Inventory Service" as Inventory
+
+Client -> Gateway : GET /guitar/orders/api/orders/FEN12345678
+Gateway -> Orders : GET /api/orders/FEN12345678
+
+alt Valid serial number
+    Orders -> Customer : GET /api/customers?mobileNumber={from order}
+    Customer --> Orders : CustomerDetailsDto
+
+    Orders -> Inventory : GET /api/inventory?serialNumber=FEN12345678
+    Inventory --> Orders : InventoryDto
+
+    Orders --> Gateway : OrderDetailsDto\n(includes customer & inventory info)
+    Gateway --> Client : OrderDetailsDto (full response)
+else Invalid serial number or order not found
+    Orders --> Gateway : 404 Not Found / Error
+    Gateway --> Client : 404 Not Found / Error
+end
+
+@enduml

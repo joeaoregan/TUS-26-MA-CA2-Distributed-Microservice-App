@@ -1,0 +1,55 @@
+@startuml
+title GET /guitar/orders/api/orders/FEN12345678 - Order Details Retrieval
+
+skinparam backgroundColor #0d1117
+skinparam defaultFontColor #f0f6fc
+skinparam shadowing false
+
+skinparam sequence {
+    ArrowColor #ffffff
+    LifeLineBorderColor #58a6ff
+    LifeLineBackgroundColor #161b22
+    ParticipantBorderColor #58a6ff
+    ParticipantBackgroundColor #161b22
+    ParticipantFontColor #f0f6fc
+    ActorBorderColor #58a6ff
+    ActorBackgroundColor #161b22
+    ActorFontColor #f0f6fc
+    GroupBorderColor #ffffff
+    GroupBackgroundColor #111827
+    GroupFontColor #f0f6fc
+}
+
+skinparam note {
+    BackgroundColor #161b22
+    BorderColor #58a6ff
+    FontColor #f0f6fc
+}
+
+actor Client
+participant "API Gateway\nPort 8072" as Gateway
+
+box "Orders Domain\nPort: 8080" #1f2937
+participant "Orders Service\n" as Orders
+participant "Customers Service\n" as Customer
+end box
+
+participant "Inventory Service\nPort 9090" as Inventory
+
+Client -> Gateway : 1. GET /guitar/orders/api/orders/FEN12345678
+Gateway -> Orders : 2. Forward request to Orders Service
+
+alt Valid serial number
+    Orders -> Customer : 3. Request customer details
+    Customer --> Orders : 4. Return CustomerDetailsDto
+    Orders -> Inventory : 5. Request inventory details
+    Inventory --> Orders : 6. Return InventoryDto
+
+    Orders --> Gateway : 7. Return full OrderDetailsDto
+    Gateway --> Client : 8. Return full response
+else Invalid serial number or order not found
+    Orders --> Gateway : Error response
+    Gateway --> Client : Error response
+end
+
+@enduml
