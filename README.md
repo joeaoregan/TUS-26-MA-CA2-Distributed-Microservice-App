@@ -111,4 +111,4 @@ Configuration Repository:
 
 ![Resilience Scenario Sequences](docs/images/resilience-sequence.png)
 
-    Figure 9> Resilience Scenario Sequences
+    Figure 9. Resilience Scenario Sequences (I hate screencasts!)
