@@ -20,6 +20,9 @@
 ![Redis](https://img.shields.io/badge/Redis-Rate_Limiting-DC382D?logo=redis&logoColor=white)
 ![Lombok](https://img.shields.io/badge/Lombok-Enabled-BC043C)
 ![Spring Boot Actuator](https://img.shields.io/badge/Actuator-Enabled-6DB33F?logo=spring-boot&logoColor=white)
+![Keycloak](https://img.shields.io/badge/Keycloak-IAM%2FJWT-4D4D4D?logo=keycloak&logoColor=white)
+![Spring Cloud Config](https://img.shields.io/badge/Spring_Cloud-Config_Server-6DB33F?logo=spring&logoColor=white)
+![Jakarta Validation](https://img.shields.io/badge/Jakarta-Validation-blue?logo=jakarta-ee&logoColor=white)
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/joeaoregan/TUS-26-MA-CA2-Distributed-Microservice-App?style=flat-square\&color=orange)
 ![Last Commit](https://img.shields.io/github/last-commit/joeaoregan/TUS-26-MA-CA2-Distributed-Microservice-App?style=flat-square\&color=blue)
@@ -58,7 +61,6 @@ Configuration Repository:
 
 - **Spring Boot Starter Security**: For authenticaion.
 - **OAuth2 Resource Server**: JWT-based security.
-- **Micrometer Tracing + Zipkin/Brave**: Trace single request across service boundaries.
 
 ---
 
